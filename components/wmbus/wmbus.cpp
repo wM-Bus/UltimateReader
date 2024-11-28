@@ -560,7 +560,7 @@ namespace wmbus {
       ESP_LOGCONFIG(TAG, "    Duration: %d ms", this->led_blink_time_);
     }
 #ifdef USE_ESP32
-    ESP_LOGCONFIG(TAG, "  Chip ID: %012llX", ESP.getChipId());
+    ESP_LOGCONFIG(TAG, "  Chip ID: %012llX", ESP.getEfuseMac());
 #endif
     if (this->is_failed()) {
       ESP_LOGE(TAG, "   Check connection to radio module!");
