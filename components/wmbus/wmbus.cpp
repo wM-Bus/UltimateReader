@@ -210,6 +210,7 @@ namespace wmbus {
                     mbus_data.mode,
                     mbus_data.block);
 
+          std::pair<String, String> display_data;
           if (meter_in_config) {
             bool supported_link_mode{false};
             if (used_drv_info.linkModes().empty()) {
@@ -241,22 +242,27 @@ namespace wmbus {
               AboutTelegram about{"Ultimate Reader", mbus_data.rssi, FrameType::WMBUS, this->frame_timestamp_};
               meter->handleTelegram(about, mbus_data.frame, false, &addresses, &id_match, &t);
               if (id_match) {
-              forMe = 73;
-                for (auto const& field : sensor->fields) {
-                  std::string field_name = field.first.first;
-                  std::string unit = field.first.second;
+                forMe = 73;
+                for (auto const &field : sensor->fields) {
+                  std::string field_name = field.name;
+                  std::string unit = field.unit;
+                  bool display = field.display;
+                  sensor::Sensor *esph_sensor = field.sensor;
                   if (field_name == "rssi") {
-                    field.second->publish_state(mbus_data.rssi);
+                    esph_sensor->publish_state(mbus_data.rssi);
                   }
-                  else if (field.second->get_unit_of_measurement().empty()) {
+                  else if (esph_sensor->get_unit_of_measurement().empty()) {
                     ESP_LOGW(TAG, "Fields without unit not supported as sensor, please switch to text_sensor.");
                   }
                   else {
-                    Unit field_unit = toUnit(field.second->get_unit_of_measurement());
+                    Unit field_unit = toUnit(esph_sensor->get_unit_of_measurement());
                     if (field_unit != Unit::Unknown) {
                       double value  = meter->getNumericValue(field_name, field_unit);
                       if (!std::isnan(value)) {
-                        field.second->publish_state(value);
+                        esph_sensor->publish_state(value);
+                        if (display) {
+                          display_data = std::make_pair(String(field_name.c_str()) , String(strWithUnitLowerCase(value, field_unit).c_str()));
+                        }
                       }
                       else {
                         ESP_LOGW(TAG, "Can't get requested field '%s' with unit '%s'", field_name.c_str(), unit.c_str());
@@ -267,13 +273,15 @@ namespace wmbus {
                     }
                   }
                 }
-                for (auto const& field : sensor->text_fields) {
-                  if (meter->hasStringValue(field.first)) {
-                    std::string value  = meter->getMyStringValue(field.first);
-                    field.second->publish_state(value);
+                for (auto const &field : sensor->text_fields) {
+                  std::string field_name = field.first;
+                  text_sensor::TextSensor *esph_sensor = field.second;
+                  if (meter->hasStringValue(field_name)) {
+                    std::string value  = meter->getMyStringValue(field_name);
+                    esph_sensor->publish_state(value);
                   }
                   else {
-                    ESP_LOGW(TAG, "Can't get requested field '%s'", field.first.c_str());
+                    ESP_LOGW(TAG, "Can't get requested field '%s'", field_name.c_str());
                   }
                 }
 #ifdef USE_WMBUS_MQTT
@@ -304,7 +312,7 @@ namespace wmbus {
             // meter not in config
             forMe = 84;
           }
-          if ((this->u8g2_ != nullptr) && (this->log_all_ || meter_in_config)) {
+          if ((this->u8g2_ != nullptr) && (this->display_all_ || (display_data.first.length() > 0))) {
             this->u8g2_->clearBuffer();
             this->u8g2_->drawRFrame(0, 18, 128, 46, 5);
 
@@ -361,10 +369,19 @@ namespace wmbus {
             this->u8g2_->setFont(u8g2_font_pxplusibmvga8_mr);
             this->u8g2_->setCursor(10, 32);
             this->u8g2_->print("ID:");
-            this->u8g2_->setCursor(10, 46);
-            this->u8g2_->print("RSSI:");
-            this->u8g2_->setCursor(10, 60);
-            this->u8g2_->print("Driver:");
+            if (display_data.first.length() == 0) {
+              this->u8g2_->setCursor(10, 46);
+              this->u8g2_->print("RSSI:");
+              this->u8g2_->setCursor(10, 60);
+              this->u8g2_->print("Driver:");
+            }
+            else {
+              this->u8g2_->setFont(u8g2_font_crox1h_tr);
+              this->u8g2_->setCursor( (this->u8g2_->getDisplayWidth() - this->u8g2_->getUTF8Width(display_data.first.c_str())) / 2, 46 );
+              this->u8g2_->print(display_data.first);
+              this->u8g2_->setCursor( (this->u8g2_->getDisplayWidth() - this->u8g2_->getUTF8Width(display_data.second.c_str())) / 2, 60 );
+              this->u8g2_->print(display_data.second);
+            }
 
             String myId  = "0x" + String(t.addresses[0].id.c_str());
             String rssi = String(mbus_data.rssi) + "dBm";
@@ -374,13 +391,15 @@ namespace wmbus {
             this->u8g2_->setCursor( (this->u8g2_->getDisplayWidth() - this->u8g2_->getUTF8Width(myId.c_str())) - 10, 32 );
             this->u8g2_->print(myId);
 
-            this->u8g2_->setFont(u8g2_font_crox1h_tr);
-            this->u8g2_->setCursor( (this->u8g2_->getDisplayWidth() - this->u8g2_->getUTF8Width(rssi.c_str())) - 10, 46 );
-            this->u8g2_->print(rssi);
+            if (display_data.first.length() == 0) {
+              this->u8g2_->setFont(u8g2_font_crox1h_tr);
+              this->u8g2_->setCursor( (this->u8g2_->getDisplayWidth() - this->u8g2_->getUTF8Width(rssi.c_str())) - 10, 46 );
+              this->u8g2_->print(rssi);
 
-            this->u8g2_->setFont(u8g2_font_crox1h_tr);
-            this->u8g2_->setCursor( (this->u8g2_->getDisplayWidth() - this->u8g2_->getUTF8Width(driver.c_str())) - 10, 60 );
-            this->u8g2_->print(driver);
+              this->u8g2_->setFont(u8g2_font_crox1h_tr);
+              this->u8g2_->setCursor( (this->u8g2_->getDisplayWidth() - this->u8g2_->getUTF8Width(driver.c_str())) - 10, 60 );
+              this->u8g2_->print(driver);
+            }
 
             this->u8g2_->sendBuffer();
           }
@@ -418,7 +437,7 @@ namespace wmbus {
   }
 
   void WMBusComponent::send_to_clients(WMbusFrame &mbus_data) {
-    for (auto & client : this->clients_) {
+    for (auto &client : this->clients_) {
       switch (client.format) {
         case FORMAT_HEX:
           {
@@ -527,7 +546,7 @@ namespace wmbus {
     ESP_LOGCONFIG(TAG, "wM-Bus v%s-%s:", MY_VERSION, WMBUSMETERS_VERSION);
     if (this->clients_.size() > 0) {
       ESP_LOGCONFIG(TAG, "  Clients:");
-      for (auto & client : this->clients_) {
+      for (auto &client : this->clients_) {
         ESP_LOGCONFIG(TAG, "    %s: %s:%d %s [%s]",
                       client.name.c_str(),
                       client.ip.str().c_str(),
@@ -547,7 +566,7 @@ namespace wmbus {
       ESP_LOGE(TAG, "   Check connection to radio module!");
     }
     std::string drivers = "";
-    for (DriverInfo* p : allDrivers()) {
+    for (DriverInfo *p : allDrivers()) {
       drivers += p->name().str() + ", ";
     }
     drivers.erase(drivers.size() - 2);
@@ -569,13 +588,13 @@ namespace wmbus {
     ESP_LOGCONFIG(TAG, "    ID: %zu [0x%08X]", this->id, this->id);
     ESP_LOGCONFIG(TAG, "    Type: %s", ((this->type).empty() ? "auto detect" : this->type.c_str()));
     ESP_LOGCONFIG(TAG, "    Key: '%s'", key.c_str());
-    for (const auto &ele : this->fields) {
-      ESP_LOGCONFIG(TAG, "    Field: '%s'", ele.first.first.c_str());
-      LOG_SENSOR("     ", "Name:", ele.second);
+    for (const auto &field : this->fields) {
+      ESP_LOGCONFIG(TAG, "    Field: '%s' %s", field.name.c_str(), (field.display ? "[display]" : ""));
+      LOG_SENSOR("     ", "Name:", field.sensor);
     }
-    for (const auto &ele : this->text_fields) {
-      ESP_LOGCONFIG(TAG, "    Text field: '%s'", ele.first.c_str());
-      LOG_TEXT_SENSOR("     ", "Name:", ele.second);
+    for (const auto &field : this->text_fields) {
+      ESP_LOGCONFIG(TAG, "    Text field: '%s'", field.first.c_str());
+      LOG_TEXT_SENSOR("     ", "Name:", field.second);
     }
   }
 

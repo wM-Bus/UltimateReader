@@ -73,6 +73,13 @@ namespace wmbus {
     bool retained;
   };
 
+  struct SensorField {
+    std::string name;
+    std::string unit;
+    bool display;
+    sensor::Sensor *sensor;
+  };
+
   class WMBusListener {
     public:
       WMBusListener(const uint32_t id, const std::string type, const std::string key);
@@ -80,9 +87,9 @@ namespace wmbus {
       std::string type;
       std::string myKey;
       std::vector<unsigned char> key{};
-      std::map<std::pair<std::string, std::string>, sensor::Sensor *> fields{};
-      void add_sensor(std::string field, std::string unit, sensor::Sensor *sensor) {
-        this->fields[std::pair<std::string, std::string>(field, unit)] = sensor;
+      std::vector<SensorField> fields{};
+      void add_sensor(std::string field, std::string unit, bool display, sensor::Sensor *sensor) {
+        this->fields.push_back(SensorField{field, unit, display, sensor});
       };
       std::map<std::string, text_sensor::TextSensor *> text_fields{};
       void add_sensor(std::string field, text_sensor::TextSensor *sensor) {
@@ -135,9 +142,9 @@ namespace wmbus {
         this->frequency_ = frequency;
         this->sync_mode_ = sync_mode;
       }
-      void add_sensor(uint32_t meter_id, std::string field, std::string unit, sensor::Sensor *sensor) {
+      void add_sensor(uint32_t meter_id, std::string field, std::string unit, bool display, sensor::Sensor *sensor) {
         if (this->wmbus_listeners_.count(meter_id) != 0) {
-          this->wmbus_listeners_[meter_id]->add_sensor(field, unit, sensor);
+          this->wmbus_listeners_[meter_id]->add_sensor(field, unit, display, sensor);
         }
       }
       void add_sensor(uint32_t meter_id, std::string field, text_sensor::TextSensor  *sensor) {
@@ -163,6 +170,7 @@ namespace wmbus {
       void set_mqtt(mqtt::MQTTClientComponent *mqtt_client) { this->mqtt_client_ = mqtt_client; }
 #endif
       void set_log_all(bool log_all) { this->log_all_ = log_all; }
+      void set_display_all(bool display_all) { this->display_all_ = display_all; }
       void add_client(const std::string name,
                       const network::IPAddress ip,
                       const uint16_t port,
@@ -193,6 +201,7 @@ namespace wmbus {
       uint32_t led_on_millis_{0};
       bool led_on_{false};
       bool log_all_{false};
+      bool display_all_{true};
       RxLoop rf_mbus_;
 #ifdef USE_ETHERNET
       ethernet::EthernetComponent *net_component_{nullptr};

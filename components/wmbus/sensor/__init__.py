@@ -17,6 +17,7 @@ CONF_LISTENER_ID = "listener_id"
 CONF_WMBUS_ID = "wmbus_id"
 CONF_FIELD = "field"
 CONF_SENSORS = 'sensors'
+CONF_DISPLAY = 'display'
 
 from .. import (
     WMBusComponent,
@@ -49,6 +50,7 @@ SENSOR_SCHEMA = sensor.sensor_schema(
 ).extend(
     {
         cv.Optional(CONF_FIELD, default=""): cv.string_strict,
+        cv.Optional(CONF_DISPLAY, default=False): cv.boolean,
     }
 )
 
@@ -64,12 +66,18 @@ CONFIG_SCHEMA = cv.Schema(
 ).extend(cv.COMPONENT_SCHEMA)
 
 async def to_code(config):
+    display = 0
     if config[CONF_TYPE]:
         cg.add_platformio_option("build_src_filter", [f"+<**/wmbus/driver_{config[CONF_TYPE].lower()}.cpp>"])
     if config[CONF_METER_ID]:
         wmbus = await cg.get_variable(config[CONF_WMBUS_ID])
         cg.add(wmbus.register_wmbus_listener(config[CONF_METER_ID], config[CONF_TYPE].lower(), config[CONF_KEY]))
         for s in config.get(CONF_SENSORS, []):
+            if s[CONF_DISPLAY]:
+                display += 1
+            if display > 1:
+                print(color(Fore.RED, f"only one field per sensor can be displayed '{config[CONF_METER_ID]}'!"))
+                exit()
             if CONF_UNIT_OF_MEASUREMENT not in s:
                 print(color(Fore.RED, f"unit_of_measurement not defined for sensor '{s[CONF_NAME]}'!"))
                 exit()
@@ -79,4 +87,4 @@ async def to_code(config):
                 field = s[CONF_NAME].lower()
             unit = s[CONF_UNIT_OF_MEASUREMENT]
             sens = await sensor.new_sensor(s)
-            cg.add(wmbus.add_sensor(config[CONF_METER_ID], field, unit, sens))
+            cg.add(wmbus.add_sensor(config[CONF_METER_ID], field, unit, s[CONF_DISPLAY], sens))

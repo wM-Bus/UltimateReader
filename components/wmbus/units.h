@@ -291,6 +291,8 @@ std::string unitToStringHR(Unit u);
 std::string unitToStringLowerCase(Unit u);
 std::string unitToStringUpperCase(Unit u);
 std::string valueToString(double v, Unit u);
+std::string strWithUnitHR(double v, Unit u);
+std::string strWithUnitLowerCase(double v, Unit u);
 
 bool extractUnit(const std::string& s, std::string* vname, Unit* u);
 
