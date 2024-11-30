@@ -5,7 +5,7 @@ substitutions:
 esphome:
   name: "${name}"
   friendly_name: "${friendly_name}"
-  name_add_mac_suffix: false
+  name_add_mac_suffix: true
   platformio_options:
     board_build.f_flash: 80000000L
     board_build.arduino.ldscript: esp32s3_out.ld
