@@ -2,6 +2,7 @@ substitutions:
   name: "ultimatereader"
   friendly_name: "Ultimate Reader"
 
+
 esphome:
   name: "${name}"
   friendly_name: "${friendly_name}"
@@ -22,63 +23,162 @@ esp32:
   framework:
     type: arduino
 
+
 psram:
+
 
 logger:
   id: component_logger
   level: DEBUG
   baud_rate: 115200
 
+
 api:
+
 
 ota:
   - platform: esphome
+
 
 dashboard_import:
   package_import_url: github://wM-Bus/UltimateReader/UltimateReader.yaml@main
   import_full_config: true
 
+
+# external_components:
+#   - source: github://wM-Bus/UltimateReader@main
+#     refresh: 0d
+#     components: [ wmbus ]
+
+
 external_components:
-  - source: github://wM-Bus/UltimateReader@main
+  - source:
+      type: local
+      path: .esphome/custom_components
     refresh: 0d
     components: [ wmbus ]
+
 
 wifi:
   ap:
 
+
 captive_portal:
+
 
 time:
   - platform: homeassistant
 
+
+# mqtt:
+#  broker: 10.0.0.88
+#  username: mqttUser
+#  password: mqttPass
+#  discovery: False   # disable entity discovery
+#  discover_ip: False # disable device discovery
+
+
 wmbus:
+  led_blink_time: "123ms"
   all_drivers: True
   display_all: True
   sync_mode: True
   log_all: True
+
+  # mqtt:
+  #   broker: 10.0.0.88
+  #   username: mqttUser
+  #   password: mqttPass
+  #   retain: True
+
+  # clients:
+  #   - name: "wmbusmeters"
+  #     ip_address: "10.0.0.22"
+  #     port: 7227
+  #     format: rtlwMBus
+  #     transport: UDP
+
 
 sensor:
   - platform: uptime
     type: seconds
     name: Ultimate Reader uptime
 
-  - platform: wmbus
-    meter_id: 0x12345678
-    type: izar
-    sensors:
-      - name: "Sample total field in m3"
-        display: True
-        field: "total"
-        accuracy_decimals: 3
-        unit_of_measurement: "m³"
-        device_class: "water"
-        state_class: "total_increasing"
-        icon: "mdi:water"
+# # add driver to compile list (will be available for autodetect), don't create sensor
+#   - platform: wmbus
+#     type: itron
 
-text_sensor:
-  - platform: wmbus
-    meter_id: 0x12345678
-    type: izar
-    sensors:
-      - name: "Sample text field"
-        field: "current_alarms"
+# # add sensor with defined type (driver will be also added to compile list)
+#   - platform: wmbus
+#     meter_id: 0x12345678
+#     type: apator162
+#     key: "00000000000000000000000000000000"
+#     sensors:
+#       - name: "my hot water RSSi"
+#         field: "rssi"
+#         accuracy_decimals: 0
+#         unit_of_measurement: "dBm"
+#         device_class: "signal_strength"
+#         state_class: "measurement"
+#         entity_category: "diagnostic"
+#       - name: "my hot water"
+#         field: "total"
+#         accuracy_decimals: 3
+#         unit_of_measurement: "m³"
+#         device_class: "water"
+#         state_class: "total_increasing"
+#         icon: "mdi:water"
+
+# # add more sensors, one without field (name will be used)
+#   - platform: wmbus
+#     meter_id: 0xABCD4321
+#     type: amiplus
+#     sensors:
+#       - name: "my current power consumption in Watts"
+#         field: "current_power_consumption"
+#         accuracy_decimals: 1
+#         unit_of_measurement: "w"
+#         device_class: "power"
+#         state_class: "measurement"
+#         icon: "mdi:transmission-tower-import"
+#       - name: "total energy on T1"
+#         field: "total_energy_consumption_tariff_1"
+#         accuracy_decimals: 3
+#         unit_of_measurement: "kwh"
+#         device_class: "energy"
+#         state_class: "total_increasing"
+#         icon: "mdi:transmission-tower-import"
+#       - name: "voltage_at_phase_1"
+#         accuracy_decimals: 0
+#         unit_of_measurement: "v"
+#         device_class: "voltage"
+#         state_class: "measurement"
+#         icon: "mdi:sine-wave"
+
+# # sensor with offset, type should be autodetected, display on OLED
+#    - platform: wmbus
+#     meter_id: 0x11223344
+#     sensors:
+#       - name: "cold water from Apator NA-1"
+#         display: True
+#         field: "total"
+#         accuracy_decimals: 3
+#         unit_of_measurement: "m³"
+#         device_class: "water"
+#         state_class: "total_increasing"
+#         icon: "mdi:water"
+#         filters:
+#           - offset: 123.0
+
+# # if mqtt defined, JSON with all decoded fields will be published to broker
+#   - platform: wmbus
+#     meter_id: 0x22113366
+#     type: vario411
+
+# text_sensor:
+#   - platform: wmbus
+#     meter_id: 0xABCD1122
+#     type: izar
+#     sensors:
+#       - name: "Izar current_alarms"
+#         field: "current_alarms"

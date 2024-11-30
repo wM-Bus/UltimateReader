@@ -176,7 +176,7 @@ namespace wmbus {
         uint32_t meter_id = (uint32_t)strtoul(t.addresses[0].id.c_str(), nullptr, 16);
         bool meter_in_config = (this->wmbus_listeners_.count(meter_id) == 1) ? true : false;
         
-        if (this->log_all_ || meter_in_config) { //No need to do sth if logging is disabled and meter is not configured
+        if (this->log_all_ || this->display_all_ || meter_in_config) { //No need to do sth if logging/display is disabled and meter is not configured
 
           auto detected_drv_info      = pickMeterDriver(&t);
           std::string detected_driver = (detected_drv_info.name().str().empty() ? "" : detected_drv_info.name().str().c_str());
@@ -202,13 +202,15 @@ namespace wmbus {
           }
 
           this->led_blink();
-          ESP_LOGI(TAG, "%s [0x%08x] RSSI: %ddBm T: %s %c1 %c",
-                    (used_driver.empty()? "Unknown!" : used_driver.c_str()),
-                    meter_id,
-                    mbus_data.rssi,
-                    telegram.c_str(),
-                    mbus_data.mode,
-                    mbus_data.block);
+          if (this->log_all_ || meter_in_config) {
+            ESP_LOGI(TAG, "%s [0x%08x] RSSI: %ddBm T: %s %c1 %c",
+                      (used_driver.empty()? "Unknown!" : used_driver.c_str()),
+                      meter_id,
+                      mbus_data.rssi,
+                      telegram.c_str(),
+                      mbus_data.mode,
+                      mbus_data.block);
+          }
 
           std::pair<String, String> display_data;
           if (meter_in_config) {
