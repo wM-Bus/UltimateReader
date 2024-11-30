@@ -1,3 +1,4 @@
+# For more information please visit: https://github.com/SzczepanLeon/esphome-components
 substitutions:
   name: "ultimatereader"
   friendly_name: "Ultimate Reader"
@@ -45,16 +46,8 @@ dashboard_import:
   import_full_config: true
 
 
-# external_components:
-#   - source: github://wM-Bus/UltimateReader@main
-#     refresh: 0d
-#     components: [ wmbus ]
-
-
 external_components:
-  - source:
-      type: local
-      path: .esphome/custom_components
+  - source: github://wM-Bus/UltimateReader@main
     refresh: 0d
     components: [ wmbus ]
 
@@ -103,6 +96,7 @@ sensor:
   - platform: uptime
     type: seconds
     name: Ultimate Reader uptime
+
 
 # # add driver to compile list (will be available for autodetect), don't create sensor
 #   - platform: wmbus
@@ -156,7 +150,7 @@ sensor:
 #         icon: "mdi:sine-wave"
 
 # # sensor with offset, type should be autodetected, display on OLED
-#    - platform: wmbus
+#   - platform: wmbus
 #     meter_id: 0x11223344
 #     sensors:
 #       - name: "cold water from Apator NA-1"
