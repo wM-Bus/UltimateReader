@@ -115,7 +115,7 @@ switch:
 wmbus:
   id: my_wmbus
   led_blink_time: "123ms"
-  display_active: False
+  display_active: True
   all_drivers: True
   display_all: True
   sync_mode: True
