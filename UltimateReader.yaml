@@ -1,9 +1,14 @@
 # For more information please visit: https://github.com/SzczepanLeon/esphome-components
+# If you want, you can buy me a coffee:
+#     https://www.buymeacoffee.com/szczepan
+#     https://buycoffee.to/szczepanleon
+
 substitutions:
   name: "ultimatereader"
   friendly_name: "Ultimate Reader"
 
 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 esphome:
   name: "${name}"
   friendly_name: "${friendly_name}"
@@ -14,7 +19,7 @@ esphome:
     board_build.arduino.partitions: default.csv
     board_build.arduino.memory_type: qio_qspi
   project:
-    name: esphome.UltimateReader
+    name: wmbus.UltimateReader
     version: "1.2"
 
 
