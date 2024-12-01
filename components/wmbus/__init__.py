@@ -44,6 +44,7 @@ CONF_CLIENTS = 'clients'
 CONF_ETH_REF = "wmbus_eth_id"
 CONF_WIFI_REF = "wmbus_wifi_id"
 CONF_DISPLAY_ALL = 'display_all'
+CONF_DISPLAY_ACTIVE = 'display_active'
 
 CODEOWNERS = ["@SzczepanLeon"]
 
@@ -105,6 +106,7 @@ CONFIG_SCHEMA = cv.Schema({
     cv.Optional(CONF_LED_BLINK_TIME, default="200ms"): cv.positive_time_period,
     cv.Optional(CONF_LOG_ALL,        default=False):   cv.boolean,
     cv.Optional(CONF_DISPLAY_ALL,    default=True):    cv.boolean,
+    cv.Optional(CONF_DISPLAY_ACTIVE, default=True):    cv.boolean,
     cv.Optional(CONF_ALL_DRIVERS,    default=False):   cv.boolean,
     cv.Optional(CONF_CLIENTS):                         cv.ensure_list(CLIENT_SCHEMA),
     cv.Optional(CONF_FREQUENCY,      default=868.950): cv.float_range(min=300, max=928),
@@ -165,6 +167,7 @@ async def to_code(config):
 
     cg.add(var.set_log_all(config[CONF_LOG_ALL]))
     cg.add(var.set_display_all(config[CONF_DISPLAY_ALL]))
+    cg.add(var.activate_display(config[CONF_DISPLAY_ACTIVE]))
 
     for conf in config.get(CONF_CLIENTS, []):
         cg.add(var.add_client(conf[CONF_NAME],

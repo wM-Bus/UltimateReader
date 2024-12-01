@@ -171,6 +171,7 @@ namespace wmbus {
 #endif
       void set_log_all(bool log_all) { this->log_all_ = log_all; }
       void set_display_all(bool display_all) { this->display_all_ = display_all; }
+      void activate_display(bool active) { this->display_active_ = active; }
       void add_client(const std::string name,
                       const network::IPAddress ip,
                       const uint16_t port,
@@ -202,6 +203,7 @@ namespace wmbus {
       bool led_on_{false};
       bool log_all_{false};
       bool display_all_{true};
+      bool display_active_{true};
       RxLoop rf_mbus_;
 #ifdef USE_ETHERNET
       ethernet::EthernetComponent *net_component_{nullptr};
