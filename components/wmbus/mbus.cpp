@@ -11,7 +11,7 @@ namespace wmbus {
       // correct length in C mode - remove 2 bytes preamble
       t_in.length -= 2;
       if (t_in.block == 'A') {
-        ESP_LOGD(TAG, "Received C1 A frame");
+        ESP_LOGVV(TAG, "Received C1 A frame");
         std::vector<unsigned char> frame(t_in.data, t_in.data + t_in.length);
         std::string telegram = format_hex_pretty(frame);
         telegram.erase(std::remove(telegram.begin(), telegram.end(), '.'), telegram.end());
@@ -21,7 +21,7 @@ namespace wmbus {
         }
       }
       else if (t_in.block == 'B') {
-        ESP_LOGD(TAG, "Received C1 B frame");
+        ESP_LOGVV(TAG, "Received C1 B frame");
         std::vector<unsigned char> frame(t_in.data, t_in.data + t_in.length);
         std::string telegram = format_hex_pretty(frame);
         telegram.erase(std::remove(telegram.begin(), telegram.end(), '.'), telegram.end());
@@ -32,7 +32,7 @@ namespace wmbus {
       }
     }
     else if (t_in.mode == 'T') {
-      ESP_LOGD(TAG, "Received T1 A frame");
+      ESP_LOGVV(TAG, "Received T1 A frame");
       std::vector<unsigned char> rawFrame(t_in.data, t_in.data + t_in.length);
       std::string telegram = format_hex_pretty(rawFrame);
       telegram.erase(std::remove(telegram.begin(), telegram.end(), '.'), telegram.end());
