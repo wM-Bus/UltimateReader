@@ -68,42 +68,6 @@ time:
   - platform: homeassistant
 
 
-switch:
- - platform: template
-   optimistic: True
-   name: "Log all"
-   turn_on_action:
-     then:
-       - lambda: |
-           id(my_wmbus).set_log_all(true);
-   turn_off_action:
-     then:
-       - lambda: |
-           id(my_wmbus).set_log_all(false);
- - platform: template
-   optimistic: True
-   name: "Display active"
-   turn_on_action:
-     then:
-       - lambda: |
-           id(my_wmbus).activate_display(true);
-   turn_off_action:
-     then:
-       - lambda: |
-           id(my_wmbus).activate_display(false);
- - platform: template
-   optimistic: True
-   name: "Display all"
-   turn_on_action:
-     then:
-       - lambda: |
-           id(my_wmbus).set_display_all(true);
-   turn_off_action:
-     then:
-       - lambda: |
-           id(my_wmbus).set_display_all(false);
-
-
 # mqtt:
 #  broker: 10.0.0.88
 #  username: mqttUser

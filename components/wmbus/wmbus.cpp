@@ -76,7 +76,6 @@ namespace wmbus {
       this->u8g2_ = new DISPLAY_MODEL(U8G2_R0, U8X8_PIN_NONE);
       this->u8g2_->begin();
       this->u8g2_->clearBuffer();
-      this->u8g2_->sendBuffer();
       if (this->display_active_) {
         this->u8g2_->drawRFrame(0, 18, 128, 46, 5);
   #ifdef USE_WMBUS_MQTT
