@@ -145,13 +145,13 @@ sensor:
 #       - name: "total energy on T1"
 #         field: "total_energy_consumption_tariff_1"
 #         accuracy_decimals: 3
-#         unit_of_measurement: "kwh"
+#         unit_of_measurement: "kWh"
 #         device_class: "energy"
 #         state_class: "total_increasing"
 #         icon: "mdi:transmission-tower-import"
 #       - name: "voltage_at_phase_1"
 #         accuracy_decimals: 0
-#         unit_of_measurement: "v"
+#         unit_of_measurement: "V"
 #         device_class: "voltage"
 #         state_class: "measurement"
 #         icon: "mdi:sine-wave"
