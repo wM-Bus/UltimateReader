@@ -35,7 +35,7 @@ void IRAM_ATTR fifoGet(void) {
     }
 
     radio.setFifoFullAction(fifoGet);
-    radio.getMod()->SPIsetRegValue(RADIOLIB_SX127X_REG_FIFO_THRESH, 0x3, 5, 0);
+    radio.setFifoThreshold(0x3);
     radio.fixedPacketLengthMode(0);
     if (radio.setFrequency(CONFIG_RADIO_FREQ) == RADIOLIB_ERR_INVALID_FREQUENCY) {
       return false;
@@ -97,7 +97,7 @@ void IRAM_ATTR fifoGet(void) {
           data_in.mode        = 'X';
           data_in.block       = 'X';
           // Serial.print("I");
-          radio.getMod()->SPIsetRegValue(RADIOLIB_SX127X_REG_FIFO_THRESH, 0x3, 5, 0);
+          radio.setFifoThreshold(0x3);
           radio.standby();
           radio.startReceive();
           rxLoop.state = WAIT_FOR_DATA;
@@ -111,7 +111,7 @@ void IRAM_ATTR fifoGet(void) {
             // Serial.print("W");
             dataInFifo = false;
             uint8_t preamble[2];
-            radio.getMod()->SPIsetRegValue(RADIOLIB_SX127X_REG_FIFO_THRESH, RADIOLIB_SX127X_FIFO_THRESH, 5, 0);
+            radio.setFifoThreshold(RADIOLIB_SX127X_FIFO_THRESH);
             // Read the 3 first bytes,
             radio.fifoGet(data_in.data, 3, &rxLoop.bytesRx);
             // Serial.print(": ");
