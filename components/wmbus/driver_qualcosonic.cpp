@@ -31,6 +31,7 @@ namespace
                             "power_kw,target_datetime,target_heat_energy_kwh,target_cooling_energy_kwh,timestamp");
         di.setMeterType(MeterType::HeatCoolingMeter);
         di.addLinkMode(LinkMode::C1);
+        di.addLinkMode(LinkMode::T1);
         di.addDetection(MANUFACTURER_AXI, 0x0d,  0x0b);
         di.addDetection(MANUFACTURER_AXI, 0x0d,  0x0c);
         di.setConstructor([](MeterInfo& mi, DriverInfo& di){ return shared_ptr<Meter>(new Driver(mi, di)); });
