@@ -112,7 +112,8 @@ namespace wmbus {
       // flag to indicate that a packet was received
       bool receivedFlag = false;
 
-      SX1276 radio = new Module(RADIO_CS_PIN, RADIO_IRQ_PIN, RADIO_RST_PIN, RADIO_BUSY_PIN);
+      SPIClass spi(VSPI);
+      SX1276 radio = new Module(RADIO_CS_PIN, RADIO_IRQ_PIN, RADIO_RST_PIN, RADIO_BUSY_PIN, spi);
 
       uint32_t sync_time_{0};
       uint8_t  extra_time_{20};
