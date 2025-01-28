@@ -23,7 +23,7 @@ namespace wmbus {
   static const char *TAG = "wmbus";
 
   void InfoComponent::setup() {
-    Wire.begin(I2C_SDA, I2C_SCL);
+    Wire.begin(I2C_SDA_PIN, I2C_SCL_PIN);
     Wire.beginTransmission(DISPLAY_ADDR);
     if (Wire.endTransmission() == 0) {
         this->u8g2_ = new DISPLAY_MODEL(U8G2_R0, U8X8_PIN_NONE);
@@ -70,7 +70,7 @@ namespace wmbus {
   }
 
   void WMBusComponent::setup() {
-    Wire.begin(I2C_SDA, I2C_SCL);
+    Wire.begin(I2C_SDA_PIN, I2C_SCL_PIN);
     Wire.beginTransmission(DISPLAY_ADDR);
     if (Wire.endTransmission() == 0) {
       this->u8g2_ = new DISPLAY_MODEL(U8G2_R0, U8X8_PIN_NONE);
