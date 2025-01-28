@@ -13,19 +13,13 @@ esphome:
   name: "${name}"
   friendly_name: "${friendly_name}"
   name_add_mac_suffix: true
-  platformio_options:
-    board_build.f_flash: 80000000L
-    board_build.arduino.ldscript: esp32s3_out.ld
-    board_build.arduino.partitions: default.csv
-    board_build.arduino.memory_type: qio_qspi
   project:
     name: wmbus.UltimateReader
     version: "1.2"
 
 
 esp32:
-  board: esp32-s3-devkitc-1
-  variant: esp32s3
+  board: esp32s3box
   framework:
     type: arduino
 
@@ -57,11 +51,13 @@ external_components:
     components: [ wmbus ]
 
 
-wifi:
-  ap:
-
-
-captive_portal:
+ethernet:
+  type: W5500
+  clk_pin: GPIO48
+  mosi_pin: GPIO21
+  miso_pin: GPIO47
+  cs_pin: GPIO45
+  interrupt_pin: GPIO14
 
 
 time:
