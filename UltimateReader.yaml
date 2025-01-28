@@ -41,12 +41,12 @@ ota:
 
 
 dashboard_import:
-  package_import_url: github://wM-Bus/UltimateReader/UltimateReader.yaml@main
+  package_import_url: github://wM-Bus/UltimateReader/UltimateReader.yaml@t-eth-elite
   import_full_config: true
 
 
 external_components:
-  - source: github://wM-Bus/UltimateReader@main
+  - source: github://wM-Bus/UltimateReader@t-eth-elite
     refresh: 0d
     components: [ wmbus ]
 
