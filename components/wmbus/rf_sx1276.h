@@ -116,8 +116,9 @@ namespace wmbus {
       //SPIClass vspi{HSPI}; // przydziela IP ale restartuje
       //SPIClass vspi{FSPI}; // przydziela IP ale restartuje
       //SPIClass vspi{3}; // przydziela IP ale restartuje
-      // SPIClass vspi{2}; // przydziela IP ale restartuje
-      SPIClass vspi{1};
+      //SPIClass vspi{2}; // przydziela IP ale restartuje
+      //SPIClass vspi{1}; // przydziela IP ale restartuje
+      SPIClass vspi{0};
       SX1276 radio = new Module(RADIO_CS_PIN, RADIO_IRQ_PIN, RADIO_RST_PIN, RADIO_BUSY_PIN, vspi);
 
       uint32_t sync_time_{0};
