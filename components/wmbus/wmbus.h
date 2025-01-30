@@ -29,9 +29,9 @@
 
 #include "utils.h"
 
-#include <Wire.h>
+// #include <Wire.h>
 
-#include <U8g2lib.h>
+// #include <U8g2lib.h>
 
 #include <WiFiClient.h>
 #include <WiFiUdp.h>
@@ -117,7 +117,7 @@ namespace wmbus {
       float get_setup_priority() const override { return setup_priority::PROCESSOR; }
 
     protected:
-      DISPLAY_MODEL *u8g2_{nullptr};
+      // DISPLAY_MODEL *u8g2_{nullptr};
   };
 
   class WMBusComponent : public Component {
@@ -210,7 +210,7 @@ namespace wmbus {
 #elif defined(USE_WIFI)
       wifi::WiFiComponent *net_component_{nullptr};
 #endif
-      DISPLAY_MODEL *u8g2_{nullptr};
+      // DISPLAY_MODEL *u8g2_{nullptr};
 #ifdef USE_WMBUS_MQTT
       PubSubClient mqtt_client_;
       MqttClient *mqtt_{nullptr};
