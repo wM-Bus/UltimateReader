@@ -113,7 +113,8 @@ namespace wmbus {
       // flag to indicate that a packet was received
       bool receivedFlag = false;
 
-      SPIClass vspi{HSPI};
+      //SPIClass vspi{HSPI}; // przydziela IP ale restartuje
+      SPIClass vspi{FSPI};
       SX1276 radio = new Module(RADIO_CS_PIN, RADIO_IRQ_PIN, RADIO_RST_PIN, RADIO_BUSY_PIN, vspi);
 
       uint32_t sync_time_{0};
