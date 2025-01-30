@@ -3,7 +3,7 @@
 #include "meters.h"
 #include "address.h"
 #include "esphome/core/application.h"
-#include "qrcode.h"
+// #include "qrcode.h"
 
 #ifdef USE_CAPTIVE_PORTAL
 #include "esphome/components/captive_portal/captive_portal.h"
@@ -23,123 +23,10 @@ namespace wmbus {
   static const char *TAG = "wmbus";
 
   void InfoComponent::setup() {
-    Wire.begin(I2C_SDA_PIN, I2C_SCL_PIN);
-    Wire.beginTransmission(DISPLAY_ADDR);
-    if (Wire.endTransmission() == 0) {
-        this->u8g2_ = new DISPLAY_MODEL(U8G2_R0, U8X8_PIN_NONE);
-        this->u8g2_->begin();
-        this->u8g2_->clearBuffer();
-        this->u8g2_->setFont(u8g2_font_VCR_OSD_mf);
-        this->u8g2_->drawStr(65, 20, "ESP");
-        this->u8g2_->drawStr(81, 38, "Home");
-        this->u8g2_->setFont(u8g2_font_10x20_te);
-        this->u8g2_->drawStr(67, 60, "wM-Bus");
-        this->u8g2_->sendBuffer();
-        
-        QRCode qrcode;
-        const int QRcode_Version = 3;
-        const int QRcode_ECC = 0;
-        uint8_t qrcodeData[qrcode_getBufferSize(QRcode_Version)];
-        qrcode_initText(&qrcode, qrcodeData, QRcode_Version, QRcode_ECC, "https://github.com/SzczepanLeon/esphome-components");
-        uint8_t x0 = 2;
-        uint8_t y0 = 4;
-        //display QRcode
-        for (uint8_t y = 0; y < qrcode.size; y++) {
-          for (uint8_t x = 0; x < qrcode.size; x++) {
-            if (qrcode_getModule(&qrcode, x, y) == 1) {
-              this->u8g2_->setDrawColor(1);
-              this->u8g2_->drawPixel(x0 + 2 * x,     y0 + 2 * y);
-              this->u8g2_->drawPixel(x0 + 2 * x + 1, y0 + 2 * y);
-              this->u8g2_->drawPixel(x0 + 2 * x,     y0 + 2 * y + 1);
-              this->u8g2_->drawPixel(x0 + 2 * x + 1, y0 + 2 * y + 1);
-            } else {
-              this->u8g2_->setDrawColor(0);
-              this->u8g2_->drawPixel(x0 + 2 * x,     y0 + 2 * y);
-              this->u8g2_->drawPixel(x0 + 2 * x + 1, y0 + 2 * y);
-              this->u8g2_->drawPixel(x0 + 2 * x,     y0 + 2 * y + 1);
-              this->u8g2_->drawPixel(x0 + 2 * x + 1, y0 + 2 * y + 1);
-            }
-          }
-        }
-        this->u8g2_->sendBuffer();
-
-        delay(3000);
-        this->u8g2_->setPowerSave(1);
-    }
     return;
   }
 
   void WMBusComponent::setup() {
-    Wire.begin(I2C_SDA_PIN, I2C_SCL_PIN);
-    Wire.beginTransmission(DISPLAY_ADDR);
-    if (Wire.endTransmission() == 0) {
-      this->u8g2_ = new DISPLAY_MODEL(U8G2_R0, U8X8_PIN_NONE);
-      this->u8g2_->begin();
-      this->u8g2_->clearBuffer();
-      if (this->display_active_) {
-        this->u8g2_->drawRFrame(0, 18, 128, 46, 5);
-  #ifdef USE_WMBUS_MQTT
-        this->u8g2_->setFont(u8g2_font_squeezed_b6_tr);
-        this->u8g2_->setCursor(2, 7);
-        this->u8g2_->print("MQ");
-        this->u8g2_->setCursor(4, 14);
-        this->u8g2_->print("TT");
-        this->u8g2_->setFont(u8g2_font_open_iconic_www_2x_t);
-        this->u8g2_->drawGlyph(17, 16, 65);
-  #elif defined(USE_MQTT)
-        this->u8g2_->setFont(u8g2_font_squeezed_b6_tr);
-        this->u8g2_->setCursor(2, 7);
-        this->u8g2_->print("MQ");
-        this->u8g2_->setCursor(4, 14);
-        this->u8g2_->print("TT");
-        this->u8g2_->setFont(u8g2_font_open_iconic_www_2x_t);
-        // this->u8g2_->drawGlyph(17, 16, 78);
-  #endif
-
-  #ifdef USE_API
-        this->u8g2_->setFont(u8g2_font_squeezed_b6_tr);
-        this->u8g2_->setCursor(55, 7);
-        this->u8g2_->print("HOME");
-        this->u8g2_->setCursor(45, 14);
-        this->u8g2_->print("ASSISTANT");
-  #endif
-
-        // ETH / WiFi
-        this->u8g2_->setFont(u8g2_font_open_iconic_www_2x_t);        
-        if (this->net_component_->is_connected()) {
-  #ifdef USE_ETHERNET
-          this->u8g2_->drawGlyph(112, 16, 83);
-  #elif defined(USE_WIFI)
-          bool captive_portal_active{false};
-  #ifdef USE_CAPTIVE_PORTAL
-          captive_portal_active = (captive_portal::global_captive_portal != nullptr && captive_portal::global_captive_portal->is_active());
-  #endif
-          if (captive_portal_active) {
-            this->u8g2_->setFont(u8g2_font_helvB12_te);
-            this->u8g2_->setCursor(112, 14);
-            this->u8g2_->print("AP");
-          }
-          else {
-            this->u8g2_->drawGlyph(112, 16, 81);
-          }
-  #endif
-        }
-        else {
-          this->u8g2_->drawGlyph(112, 16, 74);
-        }
-
-        this->u8g2_->setFont(u8g2_font_pxplusibmvga8_mr);
-        this->u8g2_->setCursor(10, 32);
-        this->u8g2_->print("ID:");
-        this->u8g2_->setCursor(10, 46);
-        this->u8g2_->print("RSSI:");
-        this->u8g2_->setCursor(10, 60);
-        this->u8g2_->print("Driver:");
-        this->u8g2_->sendBuffer();
-      } else {
-        this->u8g2_->setPowerSave(1);
-      }
-    }
     this->high_freq_.start();
     if (this->led_pin_ != nullptr) {
       this->led_pin_->setup();
@@ -318,101 +205,6 @@ namespace wmbus {
           else {
             // meter not in config
             forMe = 84;
-          }
-          if (this->display_active_) {
-            if ((this->u8g2_ != nullptr) && (this->display_all_ || (display_data.first.length() > 0))) {
-              this->u8g2_->clearBuffer();
-              this->u8g2_->drawRFrame(0, 18, 128, 46, 5);
-
-    #ifdef USE_WMBUS_MQTT
-              this->u8g2_->setFont(u8g2_font_squeezed_b6_tr);
-              this->u8g2_->setCursor(2, 7);
-              this->u8g2_->print("MQ");
-              this->u8g2_->setCursor(4, 14);
-              this->u8g2_->print("TT");
-              this->u8g2_->setFont(u8g2_font_open_iconic_www_2x_t);
-              this->u8g2_->drawGlyph(17, 16, 65);
-    #elif defined(USE_MQTT)
-              this->u8g2_->setFont(u8g2_font_squeezed_b6_tr);
-              this->u8g2_->setCursor(2, 7);
-              this->u8g2_->print("MQ");
-              this->u8g2_->setCursor(4, 14);
-              this->u8g2_->print("TT");
-    #endif
-
-    #ifdef USE_API
-              this->u8g2_->setFont(u8g2_font_squeezed_b6_tr);
-              this->u8g2_->setCursor(55, 7);
-              this->u8g2_->print("HOME");
-              this->u8g2_->setCursor(45, 14);
-              this->u8g2_->print("ASSISTANT");
-    #endif
-
-              this->u8g2_->setFont(u8g2_font_open_iconic_www_2x_t);
-              this->u8g2_->drawGlyph(95, 16, forMe);
-
-              // ETH / WiFi
-              this->u8g2_->setFont(u8g2_font_open_iconic_www_2x_t);        
-              if (this->net_component_->is_connected()) {
-    #ifdef USE_ETHERNET
-                this->u8g2_->drawGlyph(112, 16, 83);
-    #elif defined(USE_WIFI)
-                bool captive_portal_active{false};
-    #ifdef USE_CAPTIVE_PORTAL
-                captive_portal_active = (captive_portal::global_captive_portal != nullptr && captive_portal::global_captive_portal->is_active());
-    #endif
-                if (captive_portal_active) {
-                  this->u8g2_->setFont(u8g2_font_helvB12_te);
-                  this->u8g2_->setCursor(112, 14);
-                  this->u8g2_->print("AP"); // ?? when
-                }
-                else {
-                  this->u8g2_->drawGlyph(112, 16, 81);
-                }
-    #endif
-              }
-              else {
-                this->u8g2_->drawGlyph(112, 16, 74);
-              }
-              this->u8g2_->setFont(u8g2_font_pxplusibmvga8_mr);
-              this->u8g2_->setCursor(10, 32);
-              this->u8g2_->print("ID:");
-              if (display_data.first.length() == 0) {
-                this->u8g2_->setCursor(10, 46);
-                this->u8g2_->print("RSSI:");
-                this->u8g2_->setCursor(10, 60);
-                this->u8g2_->print("Driver:");
-              }
-              else {
-                this->u8g2_->setFont(u8g2_font_crox1h_tr);
-                this->u8g2_->setCursor( (this->u8g2_->getDisplayWidth() - this->u8g2_->getUTF8Width(display_data.first.c_str())) / 2, 46 );
-                this->u8g2_->print(display_data.first);
-                this->u8g2_->setCursor( (this->u8g2_->getDisplayWidth() - this->u8g2_->getUTF8Width(display_data.second.c_str())) / 2, 60 );
-                this->u8g2_->print(display_data.second);
-              }
-
-              String myId  = "0x" + String(t.addresses[0].id.c_str());
-              String rssi = String(mbus_data.rssi) + "dBm";
-              String driver = String(used_drv_info.name().str().c_str());
-
-              this->u8g2_->setFont(u8g2_font_crox1h_tr);
-              this->u8g2_->setCursor( (this->u8g2_->getDisplayWidth() - this->u8g2_->getUTF8Width(myId.c_str())) - 10, 32 );
-              this->u8g2_->print(myId);
-
-              if (display_data.first.length() == 0) {
-                this->u8g2_->setFont(u8g2_font_crox1h_tr);
-                this->u8g2_->setCursor( (this->u8g2_->getDisplayWidth() - this->u8g2_->getUTF8Width(rssi.c_str())) - 10, 46 );
-                this->u8g2_->print(rssi);
-
-                this->u8g2_->setFont(u8g2_font_crox1h_tr);
-                this->u8g2_->setCursor( (this->u8g2_->getDisplayWidth() - this->u8g2_->getUTF8Width(driver.c_str())) - 10, 60 );
-                this->u8g2_->print(driver);
-              }
-
-              this->u8g2_->sendBuffer();
-            }
-          } else {
-            this->u8g2_->setPowerSave(1);
           }
         }
       }
