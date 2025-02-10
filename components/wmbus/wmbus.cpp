@@ -264,7 +264,7 @@ namespace wmbus {
                   }
                   else {
                     Unit field_unit = toUnit(esph_sensor->get_unit_of_measurement());
-                    if (field_unit != Uni:Unknown) {
+                    if (field_unit != Unit::Unknown) {
                       double value  = meter->getNumericValue(field_name, field_unit);
                       if (!std::isnan(value)) {
                         esph_sensor->publish_state(value);
@@ -312,7 +312,7 @@ namespace wmbus {
 #endif
               }
               else {
-                ESP_LOGE(TAG, "Not for me  %s", telegram.c_str());
+                ESP_LOGE(TAG, "Not for me T: %s", telegram.c_str());
               }
             }
           }
@@ -420,7 +420,7 @@ namespace wmbus {
     }
   }
 
-  void WMBusComponen:register_wmbus_listener(const uint32_t meter_id, const std::string type, const std::string key) {
+  void WMBusComponent::register_wmbus_listener(const uint32_t meter_id, const std::string type, const std::string key) {
     if (this->wmbus_listeners_.count(meter_id) == 0) {
       WMBusListener *listener = new wmbus::WMBusListener(meter_id, type, key);
       this->wmbus_listeners_.insert({meter_id, listener});
