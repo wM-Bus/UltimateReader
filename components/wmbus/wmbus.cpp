@@ -449,6 +449,8 @@ namespace wmbus {
   }
 
   void WMBusComponent::send_to_serial(WMbusFrame &mbus_data) {
+    char telegram_time[24];
+    strftime(telegram_time, sizeof(telegram_time), "%Y-%m-%d %H:%M:%S.00Z", gmtime(&(this->frame_timestamp_)));
     std::string telegram = format_hex_pretty(mbus_data.frame);
     telegram.erase(std::remove(telegram.begin(), telegram.end(), '.'), telegram.end());
     ESP_LOGI(TAG, "\n%c1;1;1;%s;%d;;;0x%s\n", mbus_data.mode, telegram_time, mbus_data.rssi, telegram.c_str());
