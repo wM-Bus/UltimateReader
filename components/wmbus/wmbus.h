@@ -186,6 +186,7 @@ namespace wmbus {
       const LogString *format_to_string(Format format);
       const LogString *transport_to_string(Transport transport);
       void send_to_clients(WMbusFrame &mbus_data);
+      void send_to_serial(WMbusFrame &mbus_data);
       void led_blink();
       void led_handler();
       HighFrequencyLoopRequester high_freq_;
