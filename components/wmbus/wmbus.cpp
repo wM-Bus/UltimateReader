@@ -173,6 +173,7 @@ namespace wmbus {
 
       this->frame_timestamp_ = this->time_->timestamp_now();
       send_to_clients(mbus_data);
+      send_to_serial(mbus_data);
       Telegram t;
       if (t.parseHeader(mbus_data.frame) && t.addresses.empty()) {
         ESP_LOGE(TAG, "Address is empty! T: %s", telegram.c_str());
@@ -263,7 +264,7 @@ namespace wmbus {
                   }
                   else {
                     Unit field_unit = toUnit(esph_sensor->get_unit_of_measurement());
-                    if (field_unit != Unit::Unknown) {
+                    if (field_unit != Uni:Unknown) {
                       double value  = meter->getNumericValue(field_name, field_unit);
                       if (!std::isnan(value)) {
                         esph_sensor->publish_state(value);
@@ -311,7 +312,7 @@ namespace wmbus {
 #endif
               }
               else {
-                ESP_LOGE(TAG, "Not for me T: %s", telegram.c_str());
+                ESP_LOGE(TAG, "Not for me  %s", telegram.c_str());
               }
             }
           }
@@ -419,7 +420,7 @@ namespace wmbus {
     }
   }
 
-  void WMBusComponent::register_wmbus_listener(const uint32_t meter_id, const std::string type, const std::string key) {
+  void WMBusComponen:register_wmbus_listener(const uint32_t meter_id, const std::string type, const std::string key) {
     if (this->wmbus_listeners_.count(meter_id) == 0) {
       WMBusListener *listener = new wmbus::WMBusListener(meter_id, type, key);
       this->wmbus_listeners_.insert({meter_id, listener});
@@ -445,6 +446,12 @@ namespace wmbus {
         }
       }
     }
+  }
+
+  void WMBusComponent::send_to_serial(WMbusFrame &mbus_data) {
+    std::string telegram = format_hex_pretty(mbus_data.frame);
+    telegram.erase(std::remove(telegram.begin(), telegram.end(), '.'), telegram.end());
+    ESP_LOGI(TAG, "\n%c1;1;1;%s;%d;;;0x%s\n", mbus_data.mode, telegram_time, mbus_data.rssi, telegram.c_str());
   }
 
   void WMBusComponent::send_to_clients(WMbusFrame &mbus_data) {
