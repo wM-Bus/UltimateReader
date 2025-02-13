@@ -211,6 +211,13 @@ void IRAM_ATTR fifoGet(void) {
           returnFrame.mode  = 'X';
           returnFrame.block = 'X';
 
+          ESP_LOGV(TAG, "Have %d bytes from radio Rx, RSSI: %d dBm", rxLoop.bytesRx, this->returnFrame.rssi);
+          if (rxLoop.length != data_in.length) {
+            ESP_LOGE(TAG, "Length problem: req(%d) != rx(%d)", rxLoop.length, data_in.length);
+          }
+          if (this->syncMode) {
+            ESP_LOGV(TAG, "Synchronus mode enabled.");
+          }
           if (mBusDecode(data_in, returnFrame)) {
             rxLoop.complete = true;
             returnFrame.mode  = data_in.mode;
