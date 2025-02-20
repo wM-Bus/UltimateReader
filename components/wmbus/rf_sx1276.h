@@ -50,7 +50,7 @@
 #define RADIO_DIO5_PIN              36
 
 #define BOARD_VARIANT_NAME          "T3 S3 V1.2"
-#elif
+#else
 #define ETH_MISO_PIN                     47
 #define ETH_MOSI_PIN                     21
 #define ETH_SCLK_PIN                     48
