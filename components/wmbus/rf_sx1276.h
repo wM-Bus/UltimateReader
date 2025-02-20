@@ -43,8 +43,8 @@
 #define RADIO_SCLK_PIN                  SPI_SCLK_PIN
 #define RADIO_CS_PIN                    40
 #define RADIO_RST_PIN                   46
-#define RADIO_IRQ_PIN                   8
-#define RADIO_BUSY_PIN                  16
+#define RADIO_DIO0_PIN                   8
+#define RADIO_DIO1_PIN                  16
 
 #define ADC_BUTTONS_PIN                 7
 
@@ -147,11 +147,7 @@ namespace wmbus {
       // flag to indicate that a packet was received
       bool receivedFlag = false;
 
-#ifdef USE_ETHERNET
-      SX1276 radio = new Module(RADIO_CS_PIN, RADIO_IRQ_PIN, RADIO_RST_PIN, RADIO_BUSY_PIN);
-#elif defined(USE_WIFI)
       SX1276 radio = new Module(RADIO_CS_PIN, RADIO_DIO0_PIN, RADIO_RST_PIN, RADIO_DIO1_PIN);
-#endif
 
       uint32_t sync_time_{0};
       uint8_t  extra_time_{20};
