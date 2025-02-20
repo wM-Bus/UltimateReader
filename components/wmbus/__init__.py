@@ -188,13 +188,6 @@ async def to_code(config):
     cg.add_library("jgromes/RadioLib", "7.1.1")
     cg.add_platformio_option("lib_ldf_mode", "chain")
 
-    if config.get(CONF_ETH_REF):
-        cg.add_platformio_option("build_src_filter", ["+<**/wmbus/rf_sx1276_eth.h>"])
-        cg.add_platformio_option("build_src_filter", ["-<**/wmbus/rf_sx1276.h>"])
-    else:
-        cg.add_platformio_option("build_src_filter", ["+<**/wmbus/rf_sx1276.h>"])
-        cg.add_platformio_option("build_src_filter", ["-<**/wmbus/rf_sx1276_eth.h>"])
-
     cg.add_platformio_option("build_src_filter", ["+<*>", "-<.git/>", "-<.svn/>"])
 
     if config[CONF_ALL_DRIVERS]:
