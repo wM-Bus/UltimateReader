@@ -17,7 +17,8 @@
 
 #define UNUSED_PIN                   (0)
 
-#ifdef USE_ETHERNET
+#ifdef USE_WIFI
+#pragma message ( "Szczepan: mam WIFI" )
 #define I2C_SDA                     18
 #define I2C_SCL                     17
 #define OLED_RST                    UNUSED_PIN
@@ -51,6 +52,7 @@
 
 #define BOARD_VARIANT_NAME          "T3 S3 V1.2"
 #else
+#pragma message ( "Szczepan: mam ETHERNET" )
 #define ETH_MISO_PIN                     47
 #define ETH_MOSI_PIN                     21
 #define ETH_SCLK_PIN                     48
