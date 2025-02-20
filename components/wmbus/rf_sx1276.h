@@ -18,7 +18,6 @@
 #define UNUSED_PIN                   (0)
 
 #ifdef USE_WIFI
-#pragma message ( "Szczepan: mam WIFI" )
 #define I2C_SDA                     18
 #define I2C_SCL                     17
 #define OLED_RST                    UNUSED_PIN
@@ -52,7 +51,6 @@
 
 #define BOARD_VARIANT_NAME          "T3 S3 V1.2"
 #else
-#pragma message ( "Szczepan: mam ETHERNET" )
 #define ETH_MISO_PIN                     47
 #define ETH_MOSI_PIN                     21
 #define ETH_SCLK_PIN                     48
@@ -70,8 +68,8 @@
 #define SD_SCLK_PIN                     SPI_SCLK_PIN
 #define SD_CS_PIN                       12
 
-#define I2C_SDA_PIN                     17
-#define I2C_SCL_PIN                     18
+#define I2C_SDA                         17
+#define I2C_SCL                         18
 
 #define RADIO_MISO_PIN                  SPI_MISO_PIN
 #define RADIO_MOSI_PIN                  SPI_MOSI_PIN
@@ -92,7 +90,7 @@
 #define GPS_RX_PIN                      39
 #define GPS_TX_PIN                      42
 
-#define LED_PIN                         38
+#define BOARD_LED                       38
 #define LED_ON                          HIGH
 
 #define BOARD_VARIANT_NAME          "T-ETH-ELite"
