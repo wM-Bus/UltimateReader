@@ -101,7 +101,7 @@ namespace wmbus {
       bool receivedFlag = false;
 
       Module *mod{nullptr};
-      SX1276 *radio{nullptr};
+      PhysicalLayer *radio{nullptr};
 
       uint32_t sync_time_{0};
       uint8_t  extra_time_{20};
