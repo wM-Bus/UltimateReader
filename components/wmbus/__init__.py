@@ -191,8 +191,8 @@ async def to_code(config):
                               conf[CONF_TRANSPORT],
                               conf[CONF_FORMAT]))
 
-    if BOARD[config[CONF_BOARD]].get("LED_PIN"):
-        led_pin = await cg.gpio_pin_expression(BOARD[config[CONF_BOARD]]["LED_PIN"])
+    if ledPin = BOARD[config[CONF_BOARD]].get("LED_PIN"):
+        led_pin = await cg.gpio_pin_expression(ledPin)
         cg.add(var.set_led_pin(led_pin))
         cg.add(var.set_led_blink_time(config[CONF_LED_BLINK_TIME].total_milliseconds))
 
