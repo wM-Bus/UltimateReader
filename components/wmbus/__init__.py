@@ -120,7 +120,7 @@ CONFIG_SCHEMA = cv.Schema({
     cv.OnlyWith(CONF_WIFI_REF, "wifi"):                cv.use_id(wifi.WiFiComponent),
     cv.OnlyWith(CONF_ETH_REF, "ethernet"):             cv.use_id(ethernet.EthernetComponent),
     cv.Required(CONF_BOARD):                           cv.templatable(validate_board),
-    cv.Optional(CONF_LED_PIN,        default=38):      pins.gpio_output_pin_schema,
+    cv.Optional(CONF_LED_PIN,        default=BOARD[config[CONF_BOARD]]["LED_PIN"]):      pins.gpio_output_pin_schema,
     cv.Optional(CONF_LED_BLINK_TIME, default="200ms"): cv.positive_time_period,
     cv.Optional(CONF_LOG_ALL,        default=False):   cv.boolean,
     cv.Optional(CONF_DISPLAY_ALL,    default=True):    cv.boolean,
