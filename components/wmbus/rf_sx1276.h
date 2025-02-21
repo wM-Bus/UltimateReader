@@ -15,26 +15,6 @@
 
 #include <vector>
 
-
-#define UNUSED_PIN                   (0)
-
-#define I2C_SDA                     18
-#define I2C_SCL                     17
-#define OLED_RST                    UNUSED_PIN
-
-#define SDCARD_MOSI                 11
-#define SDCARD_MISO                 2
-#define SDCARD_SCLK                 14
-#define SDCARD_CS                   13
-
-#define BOARD_LED                   37
-#define LED_ON                      HIGH
-
-#define BUTTON_PIN                  0
-#define ADC_PIN                     1
-
-#define BOARD_VARIANT_NAME          "T3 S3 V1.2"
-
 #ifndef CONFIG_RADIO_FREQ
 #define CONFIG_RADIO_FREQ           868.95
 #endif
