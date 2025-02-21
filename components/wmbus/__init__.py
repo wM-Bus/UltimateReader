@@ -89,7 +89,7 @@ validate_transport = cv.enum(TRANSPORT, upper=True)
 BOARD = {
     "": "",
     "T3S3":       {"RADIO_TYPE": "SX1276", "RADIO_SCLK_PIN": 5,  "RADIO_MISO_PIN": 3, "RADIO_MOSI_PIN": 6,  "RADIO_CS_PIN": 7,  "RADIO_RST_PIN": 8,  "RADIO_DIO0_PIN": 9, "RADIO_DIO1_PIN": 33},
-    "Elite":      {"RADIO_TYPE": "SX1276", "RADIO_SCLK_PIN": 10, "RADIO_MISO_PIN": 9, "RADIO_MOSI_PIN": 11, "RADIO_CS_PIN": 40, "RADIO_RST_PIN": 46, "RADIO_DIO0_PIN": 8, "RADIO_DIO1_PIN": 16},
+    "ELITE":      {"RADIO_TYPE": "SX1276", "RADIO_SCLK_PIN": 10, "RADIO_MISO_PIN": 9, "RADIO_MOSI_PIN": 11, "RADIO_CS_PIN": 40, "RADIO_RST_PIN": 46, "RADIO_DIO0_PIN": 8, "RADIO_DIO1_PIN": 16},
 }
 validate_board = cv.enum(BOARD, upper=True)
 
