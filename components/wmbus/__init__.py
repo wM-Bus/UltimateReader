@@ -46,6 +46,7 @@ CONF_WIFI_REF = "wmbus_wifi_id"
 CONF_DISPLAY_ALL = 'display_all'
 CONF_DISPLAY_ACTIVE = 'display_active'
 CONF_BOARD = "board"
+CONF_RADIO_TYPE = "RADIO_TYPE"
 
 CODEOWNERS = ["@SzczepanLeon"]
 
@@ -74,7 +75,7 @@ validate_transport = cv.enum(TRANSPORT, upper=True)
 
 BOARD = {
     "": "",
-    "T3S3":       {"RADIO_TYPE": "SX", CONF_MOSI_PIN: 6, CONF_MISO_PIN: 3, CONF_CLK_PIN: 5, CONF_CS_PIN: 7},
+    "T3S3":       {CONF_RADIO_TYPE: "SX", CONF_MOSI_PIN: 6, CONF_MISO_PIN: 3, CONF_CLK_PIN: 5, CONF_CS_PIN: 7},
 }
 validate_board = cv.enum(BOARD, upper=True)
 
@@ -132,9 +133,7 @@ async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(var, config)
 
-    print(BOARD[config[CONF_BOARD]])
-    print(BOARD[config[CONF_BOARD]].get(RADIO_TYPE))
-    #cg.add_define("RADIO_TYPE", cg.RawExpression(BOARD[config[CONF_BOARD]][RADIO_TYPE]))
+    cg.add_define(CONF_RADIO_TYPE, cg.RawExpression(BOARD[config[CONF_BOARD]][CONF_RADIO_TYPE]))
 
     cg.add(var.add_cc1101(0, 0, 0, 0, 0, 0, config[CONF_FREQUENCY], config[CONF_SYNC_MODE]))
 
