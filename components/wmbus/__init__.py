@@ -148,7 +148,10 @@ async def to_code(config):
     await cg.register_component(var, config)
 
     for define, value in BOARD[config[CONF_BOARD]].items():
-        cg.add_define(define, cg.RawExpression(value))
+        print(define)
+        print(value)
+        print(cg.RawExpression(value))
+        #cg.add_define(define, cg.RawExpression(value))
 
     cg.add(var.add_cc1101(0, 0, 0, 0, 0, 0, config[CONF_FREQUENCY], config[CONF_SYNC_MODE]))
 
