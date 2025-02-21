@@ -154,7 +154,7 @@ async def to_code(config):
         if isinstance(value, str):
             cg.add_define(define, cg.RawExpression(value))
         else:
-            cg.add_define(define, (value)
+            cg.add_define(define, (value))
 
     cg.add(var.add_cc1101(0, 0, 0, 0, 0, 0, config[CONF_FREQUENCY], config[CONF_SYNC_MODE]))
 
