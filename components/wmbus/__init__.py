@@ -45,6 +45,7 @@ CONF_ETH_REF = "wmbus_eth_id"
 CONF_WIFI_REF = "wmbus_wifi_id"
 CONF_DISPLAY_ALL = 'display_all'
 CONF_DISPLAY_ACTIVE = 'display_active'
+CONF_BOARD = "board"
 
 CODEOWNERS = ["@SzczepanLeon"]
 
