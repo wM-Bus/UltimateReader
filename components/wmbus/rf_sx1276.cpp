@@ -22,44 +22,47 @@ void IRAM_ATTR fifoGet(void) {
 
   bool RxLoop::init(uint8_t mosi, uint8_t miso, uint8_t clk, uint8_t cs,
                     uint8_t gdo0, uint8_t gdo2, float freq, bool syncMode) {
+
+    radio = new Module(RADIO_CS_PIN, RADIO_DIO0_PIN, RADIO_RST_PIN, RADIO_DIO1_PIN);
+    
     bool retVal = true;
     this->syncMode = syncMode;
 
     setupBoards();
     delay(1500);
 
-    int state = radio.beginFSK();
+    int state = radio->beginFSK();
 
     if (state != RADIOLIB_ERR_NONE) {
       return false;
     }
 
-    radio.setFifoFullAction(fifoGet);
-    radio.setFifoThreshold(0x3);
-    radio.fixedPacketLengthMode(0);
-    if (radio.setFrequency(CONFIG_RADIO_FREQ) == RADIOLIB_ERR_INVALID_FREQUENCY) {
+    radio->setFifoFullAction(fifoGet);
+    radio->setFifoThreshold(0x3);
+    radio->fixedPacketLengthMode(0);
+    if (radio->setFrequency(CONFIG_RADIO_FREQ) == RADIOLIB_ERR_INVALID_FREQUENCY) {
       return false;
     }
-    if (radio.setBandwidth(CONFIG_RADIO_BW) == RADIOLIB_ERR_INVALID_BANDWIDTH) {
+    if (radio->setBandwidth(CONFIG_RADIO_BW) == RADIOLIB_ERR_INVALID_BANDWIDTH) {
       return false;
     }
-    if (radio.setOOK(false) != RADIOLIB_ERR_NONE) {
+    if (radio->setOOK(false) != RADIOLIB_ERR_NONE) {
       return false;
     }
-    if (radio.setFrequencyDeviation(50.0) != RADIOLIB_ERR_NONE) {
+    if (radio->setFrequencyDeviation(50.0) != RADIOLIB_ERR_NONE) {
       return false;
     }
-    if (radio.setBitRate(100.0) != RADIOLIB_ERR_NONE) {
+    if (radio->setBitRate(100.0) != RADIOLIB_ERR_NONE) {
       return false;
     }
-    if (radio.setPreambleLength(32) != RADIOLIB_ERR_NONE) {
+    if (radio->setPreambleLength(32) != RADIOLIB_ERR_NONE) {
       return false;
     }
     uint8_t syncWord[] = {0x54, 0x3D};
-    if (radio.setSyncWord(syncWord, 2) != RADIOLIB_ERR_NONE) {
+    if (radio->setSyncWord(syncWord, 2) != RADIOLIB_ERR_NONE) {
       return false;
     }
-    if (radio.setCRC(false) == RADIOLIB_ERR_INVALID_CRC_CONFIGURATION) {
+    if (radio->setCRC(false) == RADIOLIB_ERR_INVALID_CRC_CONFIGURATION) {
       return false;
     }
 
@@ -68,7 +71,7 @@ void IRAM_ATTR fifoGet(void) {
     delay(1000);
 
     ESP_LOGI(TAG, "Radio Starting to listen ...");
-    state = radio.startReceive();
+    state = radio->startReceive();
     if (state != RADIOLIB_ERR_NONE) {
       return false;
     }
@@ -97,9 +100,9 @@ void IRAM_ATTR fifoGet(void) {
           data_in.mode        = 'X';
           data_in.block       = 'X';
           // Serial.print("I");
-          radio.setFifoThreshold(0x3);
-          radio.standby();
-          radio.startReceive();
+          radio->setFifoThreshold(0x3);
+          radio->standby();
+          radio->startReceive();
           rxLoop.state = WAIT_FOR_DATA;
           sync_time_ = millis();
           max_wait_time_ = extra_time_;
@@ -111,9 +114,9 @@ void IRAM_ATTR fifoGet(void) {
             // Serial.print("W");
             dataInFifo = false;
             uint8_t preamble[2];
-            radio.setFifoThreshold(RADIOLIB_SX127X_FIFO_THRESH);
+            radio->setFifoThreshold(RADIOLIB_SX127X_FIFO_THRESH);
             // Read the 3 first bytes,
-            radio.fifoGet(data_in.data, 3, &rxLoop.bytesRx);
+            radio->fifoGet(data_in.data, 3, &rxLoop.bytesRx);
             // Serial.print(": ");
             // Serial.print(data_in.data[0], HEX);
             // Serial.print(data_in.data[1], HEX);
@@ -183,7 +186,7 @@ void IRAM_ATTR fifoGet(void) {
           if (dataInFifo) { // assert when Rx FIFO buffer threshold reached
             dataInFifo = false;
             max_wait_time_    += extra_time_;
-            receivedFlag = radio.fifoGet(data_in.data, rxLoop.length, &rxLoop.bytesRx);
+            receivedFlag = radio->fifoGet(data_in.data, rxLoop.length, &rxLoop.bytesRx);
 
             // if (receivedFlag) {
             //   Serial.print("D");
@@ -206,7 +209,7 @@ void IRAM_ATTR fifoGet(void) {
           data_in.lengthField = rxLoop.lengthField;
 
           returnFrame.frame.clear();
-          returnFrame.rssi  = radio.getRSSI();
+          returnFrame.rssi  = radio->getRSSI();
           returnFrame.lqi   = 0;
           returnFrame.mode  = 'X';
           returnFrame.block = 'X';
