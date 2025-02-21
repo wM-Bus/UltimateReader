@@ -27,9 +27,6 @@ from esphome.const import SOURCE_FILE_EXTENSIONS
 
 CONF_TRANSPORT = "transport"
 
-CONF_GDO0_PIN = "gdo0_pin"
-CONF_GDO2_PIN = "gdo2_pin"
-CONF_LED_PIN = "led_pin"
 CONF_LED_BLINK_TIME = "led_blink_time"
 CONF_LOG_ALL = "log_all"
 CONF_ALL_DRIVERS = "all_drivers"
@@ -89,10 +86,10 @@ validate_transport = cv.enum(TRANSPORT, upper=True)
 BOARD = {
     "T3S3":       {"RADIO_TYPE": "SX1276", "RADIO_SCLK_PIN": 5,  "RADIO_MISO_PIN": 3, "RADIO_MOSI_PIN": 6,  "RADIO_CS_PIN": 7,
                                            "RADIO_RST_PIN": 8,  "RADIO_DIO0_PIN": 9, "RADIO_DIO1_PIN": 33,
-                                           "I2C_SDA" 18, "I2C_SCL" 17},
+                                           "LED_PIN": 38, "I2C_SDA": 18, "I2C_SCL": 17},
     "ELITE":      {"RADIO_TYPE": "SX1276", "RADIO_SCLK_PIN": 10, "RADIO_MISO_PIN": 9, "RADIO_MOSI_PIN": 11, "RADIO_CS_PIN": 40,
                                            "RADIO_RST_PIN": 46, "RADIO_DIO0_PIN": 8, "RADIO_DIO1_PIN": 16,
-                                           "I2C_SDA" 17, "I2C_SCL" 18},
+                                           "LED_PIN": 38, "I2C_SDA": 17, "I2C_SCL": 18},
 }
 validate_board = cv.enum(BOARD, upper=True)
 
@@ -122,7 +119,6 @@ CONFIG_SCHEMA = cv.Schema({
     cv.OnlyWith(CONF_WIFI_REF, "wifi"):                cv.use_id(wifi.WiFiComponent),
     cv.OnlyWith(CONF_ETH_REF, "ethernet"):             cv.use_id(ethernet.EthernetComponent),
     cv.Required(CONF_BOARD):                           cv.templatable(validate_board),
-    cv.Optional(CONF_LED_PIN,        default=38):      pins.gpio_output_pin_schema,
     cv.Optional(CONF_LED_BLINK_TIME, default="200ms"): cv.positive_time_period,
     cv.Optional(CONF_LOG_ALL,        default=False):   cv.boolean,
     cv.Optional(CONF_DISPLAY_ALL,    default=True):    cv.boolean,
@@ -195,8 +191,8 @@ async def to_code(config):
                               conf[CONF_TRANSPORT],
                               conf[CONF_FORMAT]))
 
-    if CONF_LED_PIN in config:
-        led_pin = await cg.gpio_pin_expression(config[CONF_LED_PIN])
+    if BOARD[config[CONF_BOARD]].get("LED_PIN"):
+        led_pin = await cg.gpio_pin_expression(BOARD[config[CONF_BOARD]]["LED_PIN"])
         cg.add(var.set_led_pin(led_pin))
         cg.add(var.set_led_blink_time(config[CONF_LED_BLINK_TIME].total_milliseconds))
 
