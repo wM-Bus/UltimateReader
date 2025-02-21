@@ -100,6 +100,7 @@ namespace wmbus {
       // flag to indicate that a packet was received
       bool receivedFlag = false;
 
+      Module *mod{nullptr};
       SX1276 *radio{nullptr};
 
       uint32_t sync_time_{0};
