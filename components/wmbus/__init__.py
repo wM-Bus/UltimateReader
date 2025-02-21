@@ -75,7 +75,7 @@ validate_transport = cv.enum(TRANSPORT, upper=True)
 
 BOARD = {
     "": "",
-    "T3S3":       {CONF_RADIO_TYPE: "SX", CONF_MOSI_PIN: 6, CONF_MISO_PIN: 3, CONF_CLK_PIN: 5, CONF_CS_PIN: 7},
+    "T3S3":       {CONF_RADIO_TYPE: "SX1276", CONF_MOSI_PIN: 6, CONF_MISO_PIN: 3, CONF_CLK_PIN: 5, CONF_CS_PIN: 7},
 }
 validate_board = cv.enum(BOARD, upper=True)
 
