@@ -132,7 +132,9 @@ async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(var, config)
 
-    cg.add_define("RADIO_TYPE", cg.RawExpression(BOARD[config[CONF_BOARD]][RADIO_TYPE]))
+    print(BOARD[config[CONF_BOARD]])
+    print(BOARD[config[CONF_BOARD]].get(RADIO_TYPE))
+    #cg.add_define("RADIO_TYPE", cg.RawExpression(BOARD[config[CONF_BOARD]][RADIO_TYPE]))
 
     cg.add(var.add_cc1101(0, 0, 0, 0, 0, 0, config[CONF_FREQUENCY], config[CONF_SYNC_MODE]))
 
