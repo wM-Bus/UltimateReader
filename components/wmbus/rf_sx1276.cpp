@@ -25,6 +25,9 @@ void IRAM_ATTR fifoGet(void) {
     bool retVal = true;
     this->syncMode = syncMode;
 
+    mod = new Module(RADIO_CS_PIN, RADIO_DIO0_PIN, RADIO_RST_PIN, RADIO_DIO1_PIN);
+    radio = new SX1276(mod);
+    
     setupBoards();
     delay(1500);
 
