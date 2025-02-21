@@ -23,7 +23,8 @@ void IRAM_ATTR fifoGet(void) {
   bool RxLoop::init(uint8_t mosi, uint8_t miso, uint8_t clk, uint8_t cs,
                     uint8_t gdo0, uint8_t gdo2, float freq, bool syncMode) {
 
-    radio = new SX1276(RADIO_CS_PIN, RADIO_DIO0_PIN, RADIO_RST_PIN, RADIO_DIO1_PIN);
+    mod = new Module(RADIO_CS_PIN, RADIO_DIO0_PIN, RADIO_RST_PIN, RADIO_DIO1_PIN);
+    radio = new SX1276(mod);
     
     bool retVal = true;
     this->syncMode = syncMode;
