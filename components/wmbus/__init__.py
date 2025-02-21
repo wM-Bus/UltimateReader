@@ -27,6 +27,7 @@ from esphome.const import SOURCE_FILE_EXTENSIONS
 
 CONF_TRANSPORT = "transport"
 
+CONF_LED_PIN = "led_pin"
 CONF_LED_BLINK_TIME = "led_blink_time"
 CONF_LOG_ALL = "log_all"
 CONF_ALL_DRIVERS = "all_drivers"
@@ -119,6 +120,7 @@ CONFIG_SCHEMA = cv.Schema({
     cv.OnlyWith(CONF_WIFI_REF, "wifi"):                cv.use_id(wifi.WiFiComponent),
     cv.OnlyWith(CONF_ETH_REF, "ethernet"):             cv.use_id(ethernet.EthernetComponent),
     cv.Required(CONF_BOARD):                           cv.templatable(validate_board),
+    cv.Optional(CONF_LED_PIN,        default=38):      pins.gpio_output_pin_schema,
     cv.Optional(CONF_LED_BLINK_TIME, default="200ms"): cv.positive_time_period,
     cv.Optional(CONF_LOG_ALL,        default=False):   cv.boolean,
     cv.Optional(CONF_DISPLAY_ALL,    default=True):    cv.boolean,
@@ -191,8 +193,9 @@ async def to_code(config):
                               conf[CONF_TRANSPORT],
                               conf[CONF_FORMAT]))
 
-    if BOARD[config[CONF_BOARD]].get("LED_PIN"):
-        cg.add(var.set_led_pin(BOARD[config[CONF_BOARD]]["LED_PIN"]))
+    if CONF_LED_PIN in config:
+        led_pin = await cg.gpio_pin_expression(config[CONF_LED_PIN])
+        cg.add(var.set_led_pin(led_pin))
         cg.add(var.set_led_blink_time(config[CONF_LED_BLINK_TIME].total_milliseconds))
 
     cg.add_library("SPI", None)
