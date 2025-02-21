@@ -71,6 +71,12 @@ TRANSPORT = {
 }
 validate_transport = cv.enum(TRANSPORT, upper=True)
 
+BOARD = {
+    "": "",
+    "T3S3":       {"RADIO_TYPE": "SX", CONF_MOSI_PIN: 6, CONF_MISO_PIN: 3, CONF_CLK_PIN: 5, CONF_CS_PIN: 7},
+}
+validate_board = cv.enum(BOARD, upper=True)
+
 CLIENT_SCHEMA = cv.Schema({
     cv.GenerateID():                              cv.declare_id(Client),
     cv.Required(CONF_NAME):                       cv.string_strict,
@@ -96,12 +102,7 @@ CONFIG_SCHEMA = cv.Schema({
     cv.OnlyWith(CONF_TIME_ID, "time"):                 cv.use_id(time.RealTimeClock),
     cv.OnlyWith(CONF_WIFI_REF, "wifi"):                cv.use_id(wifi.WiFiComponent),
     cv.OnlyWith(CONF_ETH_REF, "ethernet"):             cv.use_id(ethernet.EthernetComponent),
-    cv.Optional(CONF_MOSI_PIN,       default=35):      pins.internal_gpio_output_pin_schema,
-    cv.Optional(CONF_MISO_PIN,       default=36):      pins.internal_gpio_input_pin_schema,
-    cv.Optional(CONF_CLK_PIN,        default=37):      pins.internal_gpio_output_pin_schema,
-    cv.Optional(CONF_CS_PIN,         default=40):       pins.internal_gpio_output_pin_schema,
-    cv.Optional(CONF_GDO0_PIN,       default=5):       pins.internal_gpio_input_pin_schema,
-    cv.Optional(CONF_GDO2_PIN,       default=4):       pins.internal_gpio_input_pin_schema,
+    cv.Optional(CONF_BOARD, default="T3S3"):               cv.templatable(validate_board),
     cv.Optional(CONF_LED_PIN,        default=38):      pins.gpio_output_pin_schema,
     cv.Optional(CONF_LED_BLINK_TIME, default="200ms"): cv.positive_time_period,
     cv.Optional(CONF_LOG_ALL,        default=False):   cv.boolean,
@@ -130,16 +131,9 @@ async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(var, config)
 
-    cg.add_define("RADIO_TYPE", cg.RawExpression("SX1276"))
+    cg.add_define("RADIO_TYPE", cg.RawExpression(config[CONF_LED_PIN][RADIO_TYPE]))
 
-    mosi = await cg.gpio_pin_expression(config[CONF_MOSI_PIN])
-    miso = await cg.gpio_pin_expression(config[CONF_MISO_PIN])
-    clk  = await cg.gpio_pin_expression(config[CONF_CLK_PIN])
-    cs   = await cg.gpio_pin_expression(config[CONF_CS_PIN])
-    gdo0 = await cg.gpio_pin_expression(config[CONF_GDO0_PIN])
-    gdo2 = await cg.gpio_pin_expression(config[CONF_GDO2_PIN])
-
-    cg.add(var.add_cc1101(mosi, miso, clk, cs, gdo0, gdo2, config[CONF_FREQUENCY], config[CONF_SYNC_MODE]))
+    cg.add(var.add_cc1101(0, 0, 0, 0, 0, 0, config[CONF_FREQUENCY], config[CONF_SYNC_MODE]))
 
     time = await cg.get_variable(config[CONF_TIME_ID])
     cg.add(var.set_time(time))
