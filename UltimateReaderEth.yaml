@@ -96,6 +96,7 @@ time:
 
 
 wmbus:
+  board: ELITE
   id: my_wmbus
   led_blink_time: "123ms"
   display_active: True
