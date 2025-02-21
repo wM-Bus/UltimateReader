@@ -149,9 +149,6 @@ async def to_code(config):
     await cg.register_component(var, config)
 
     for define, value in BOARD[config[CONF_BOARD]].items():
-        print(define)
-        print(value)
-        print(" ")
         if isinstance(value, str):
             cg.add_define(define, cg.RawExpression(value))
         else:
