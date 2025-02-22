@@ -4,6 +4,7 @@
 #include "esphome/core/gpio.h"
 #include "esphome/core/helpers.h"
 #include "esphome/core/component.h"
+#include "esphome/components/spi/spi.h"
 #include "esphome/components/network/ip_address.h"
 #include "esphome/components/sensor/sensor.h"
 #include "esphome/components/text_sensor/text_sensor.h"
@@ -158,6 +159,7 @@ namespace wmbus {
       void set_wifi(wifi::WiFiComponent *wifi_component) { this->net_component_ = wifi_component; }
 #endif
       void set_time(time::RealTimeClock *time) { this->time_ = time; }
+      void set_spi(time::RealTimeClock *time) { this->spi_ = spi; }
 #ifdef USE_WMBUS_MQTT
       void set_mqtt(const std::string name,
                     const std::string password,
@@ -198,6 +200,7 @@ namespace wmbus {
       WiFiClient tcp_client_;
       WiFiUDP udp_client_;
       time::RealTimeClock *time_{nullptr};
+      spi::SPIDevice *spi_{nullptr};
       uint32_t led_blink_time_{0};
       uint32_t led_on_millis_{0};
       bool led_on_{false};
