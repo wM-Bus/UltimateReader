@@ -48,7 +48,7 @@ CONF_DISPLAY_ACTIVE = 'display_active'
 
 CODEOWNERS = ["@SzczepanLeon"]
 
-DEPENDENCIES = ["time"]
+DEPENDENCIES = ["time", "spi"]
 AUTO_LOAD = ["sensor", "text_sensor"]
 
 wmbus_ns = cg.esphome_ns.namespace('wmbus')
