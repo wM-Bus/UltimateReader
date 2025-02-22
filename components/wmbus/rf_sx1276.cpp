@@ -9,7 +9,7 @@ namespace wmbus {
 
 void setupBoards()
 {
-  SPI.begin(RADIO_SCLK_PIN, RADIO_MISO_PIN, RADIO_MOSI_PIN);
+  //
 }
 
 // this function is called when the radio receive buffer
