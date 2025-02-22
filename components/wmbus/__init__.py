@@ -18,6 +18,7 @@ from esphome.const import (
     CONF_PORT,
     CONF_FORMAT,
     CONF_TIME_ID,
+    CONF_SPI_ID,
     CONF_FREQUENCY,
     CONF_MQTT_ID,
     CONF_MQTT,
@@ -94,6 +95,7 @@ CONFIG_SCHEMA = cv.Schema({
     cv.GenerateID():                                   cv.declare_id(WMBusComponent),
     cv.OnlyWith(CONF_MQTT_ID, "mqtt"):                 cv.use_id(mqtt.MQTTClientComponent),
     cv.OnlyWith(CONF_TIME_ID, "time"):                 cv.use_id(time.RealTimeClock),
+    cv.OnlyWith(CONF_SPI_ID, "spi"):                   cv.use_id(spi.SPIDevice),
     cv.OnlyWith(CONF_WIFI_REF, "wifi"):                cv.use_id(wifi.WiFiComponent),
     cv.OnlyWith(CONF_ETH_REF, "ethernet"):             cv.use_id(ethernet.EthernetComponent),
     cv.Optional(CONF_MOSI_PIN,       default=35):      pins.internal_gpio_output_pin_schema,
@@ -141,6 +143,9 @@ async def to_code(config):
 
     time = await cg.get_variable(config[CONF_TIME_ID])
     cg.add(var.set_time(time))
+
+    spi = await cg.get_variable(config[CONF_SPI_ID])
+    cg.add(var.set_spi(spi))
 
 
     if config.get(CONF_ETH_REF):
