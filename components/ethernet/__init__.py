@@ -236,9 +236,9 @@ def _final_validate(config):
     if spi_configs := fv.full_config.get().get(CONF_SPI):
         variant = get_esp32_variant()
         if variant in (VARIANT_ESP32C3, VARIANT_ESP32S2, VARIANT_ESP32S3):
-            spi_host = "SPI2_HOST"
-        else:
             spi_host = "SPI3_HOST"
+        else:
+            spi_host = "SPI2_HOST"
         for spi_conf in spi_configs:
             if (index := spi_conf.get(CONF_INTERFACE_INDEX)) is not None:
                 interface = get_spi_interface(index)
