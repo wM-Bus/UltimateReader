@@ -44,6 +44,10 @@
 #define DISPLAY_ADDR            0x3C
 #endif
 
+#define LED_PIN                     38
+#define I2C_SDA                     17
+#define I2C_SCL                     18
+
 namespace esphome {
 namespace wmbus {
 
