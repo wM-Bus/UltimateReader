@@ -146,6 +146,7 @@ namespace wmbus {
       this->led_pin_->digital_write(false);
       this->led_on_ = false;
     }
+    /*
     if (!rf_mbus_.init(this->spi_conf_.mosi->get_pin(), this->spi_conf_.miso->get_pin(),
                        this->spi_conf_.clk->get_pin(),  this->spi_conf_.cs->get_pin(),
                        this->spi_conf_.gdo0->get_pin(), this->spi_conf_.gdo2->get_pin(),
@@ -154,6 +155,7 @@ namespace wmbus {
       ESP_LOGE(TAG, "Radio chip initialization failed");
       return;
     }
+    */
 #ifdef USE_WMBUS_MQTT
     this->mqtt_client_.setClient(this->tcp_client_);
     this->mqtt_client_.setServer(this->mqtt_->ip, this->mqtt_->port);
