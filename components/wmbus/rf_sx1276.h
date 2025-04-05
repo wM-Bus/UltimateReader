@@ -29,6 +29,18 @@
 #define WMBUS_BLOCK_A_PREAMBLE     0xCD
 #define WMBUS_BLOCK_B_PREAMBLE     0x3D
 
+#define RADIO_SCLK_PIN              10
+#define RADIO_MISO_PIN              9
+#define RADIO_MOSI_PIN              11
+#define RADIO_CS_PIN                40
+#define RADIO_RST_PIN               46
+#define RADIO_DIO0_PIN              8
+#define RADIO_DIO1_PIN              16
+
+#define LED_PIN                     38
+#define I2C_SDA                     17
+#define I2C_SCL                     18
+
 enum RxLoopState : uint8_t {
   INIT_RX       = 0,
   WAIT_FOR_SYNC = 1,
