@@ -119,7 +119,6 @@ CONFIG_SCHEMA = cv.Schema({
     cv.OnlyWith(CONF_TIME_ID, "time"):                 cv.use_id(time.RealTimeClock),
     cv.OnlyWith(CONF_WIFI_REF, "wifi"):                cv.use_id(wifi.WiFiComponent),
     cv.OnlyWith(CONF_ETH_REF, "ethernet"):             cv.use_id(ethernet.EthernetComponent),
-    cv.Required(CONF_BOARD):                           cv.templatable(validate_board),
     cv.Optional(CONF_LED_PIN,        default=38):      pins.gpio_output_pin_schema,
     cv.Optional(CONF_LED_BLINK_TIME, default="200ms"): cv.positive_time_period,
     cv.Optional(CONF_LOG_ALL,        default=False):   cv.boolean,
@@ -147,12 +146,6 @@ async def to_code(config):
 
     var = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(var, config)
-
-    for define, value in BOARD[config[CONF_BOARD]].items():
-        if isinstance(value, str):
-            cg.add_define(define, cg.RawExpression(value))
-        else:
-            cg.add_define(define, (value))
 
     cg.add(var.add_cc1101(0, 0, 0, 0, 0, 0, config[CONF_FREQUENCY], config[CONF_SYNC_MODE]))
 
