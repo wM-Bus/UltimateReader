@@ -186,6 +186,8 @@ async def to_code(config):
         None,
         "https://github.com/SzczepanLeon/wmbus-drivers#wmbusmeters",
     )
+
+    cg.add_build_flag("-Isrc/esphome/components/wmbus");
     
     cg.add_library("SPI", None)
     cg.add_library("EEPROM", None)
