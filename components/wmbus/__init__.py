@@ -181,6 +181,12 @@ async def to_code(config):
         cg.add(var.set_led_pin(led_pin))
         cg.add(var.set_led_blink_time(config[CONF_LED_BLINK_TIME].total_milliseconds))
 
+    cg.add_library(
+        None,
+        None,
+        "https://github.com/SzczepanLeon/wmbus-drivers#wmbusmeters",
+    )
+    
     cg.add_library("SPI", None)
     cg.add_library("EEPROM", None)
     cg.add_library("ricmoo/QRCode", "0.0.1")
