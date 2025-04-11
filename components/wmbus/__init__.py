@@ -188,6 +188,7 @@ async def to_code(config):
     )
 
     cg.add_build_flag("-Isrc/esphome/components/wmbus");
+    cg.add_build_flag("-Isrc");
     
     cg.add_library("SPI", None)
     cg.add_library("EEPROM", None)
