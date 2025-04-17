@@ -174,6 +174,16 @@ namespace wmbus {
       this->frame_timestamp_ = this->time_->timestamp_now();
       send_to_clients(mbus_data);
       Telegram t;
+      if (t.parseHeader(mbus_data.frame) && t.addresses.empty()) {
+        ESP_LOGE(TAG, "Address is empty! T: %s", telegram.c_str());
+      }
+      else {
+        uint32_t meter_id = (uint32_t)strtoul(t.addresses[0].id.c_str(), nullptr, 16);
+        bool meter_in_config = (this->wmbus_listeners_.count(meter_id) == 1) ? true : false;
+        // // // // // // // // // // // // // // // // // //
+
+        
+      }
     }
     if (false) {
       ESP_LOGVV(TAG, "Have data from radio ...");
