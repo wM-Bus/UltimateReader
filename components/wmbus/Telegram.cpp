@@ -2176,12 +2176,12 @@ bool Telegram::parseWMBUSHeader(vector<uchar>& input_frame)
     explanations.clear();
     suffix_size = 0;
     frame = input_frame;
- /*
     vector<uchar>::iterator pos = frame.begin();
     // Parsed accumulates parsed bytes.
     parsed.clear();
     // Fixes quirks from non-compliant meters to make telegram compatible with the standard
     preProcess();
+ /*
 
     ok = parseDLL(pos);
     if (!ok) return false;
