@@ -2153,13 +2153,13 @@ bool Telegram::parse(vector<uchar>& input_frame, MeterKeys* mk, bool warn)
 
 bool Telegram::parseHeader(vector<uchar>& input_frame)
 {
-    // switch (about.type)
-    // {
-    // case FrameType::WMBUS: return parseWMBUSHeader(input_frame);
-    // case FrameType::MBUS: return parseMBUSHeader(input_frame);
-    // case FrameType::HAN: return parseHANHeader(input_frame);
-    // }
-    // assert(0);
+    switch (about.type)
+    {
+    case FrameType::WMBUS: return parseWMBUSHeader(input_frame);
+    case FrameType::MBUS: return parseMBUSHeader(input_frame);
+    case FrameType::HAN: return parseHANHeader(input_frame);
+    }
+    assert(0);
     return false;
 }
 
@@ -2175,6 +2175,7 @@ bool Telegram::parseWMBUSHeader(vector<uchar>& input_frame)
     decryption_failed = false;
     explanations.clear();
     suffix_size = 0;
+ /*
     frame = input_frame;
     vector<uchar>::iterator pos = frame.begin();
     // Parsed accumulates parsed bytes.
@@ -2201,6 +2202,8 @@ bool Telegram::parseWMBUSHeader(vector<uchar>& input_frame)
     if (!ok) return true;
 
     return true;
+
+    */
 }
 
 bool Telegram::parseWMBUS(vector<uchar>& input_frame, MeterKeys* mk, bool warn)
