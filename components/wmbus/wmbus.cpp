@@ -174,7 +174,7 @@ namespace wmbus {
       this->frame_timestamp_ = this->time_->timestamp_now();
       send_to_clients(mbus_data);
       Telegram t;
-      // t.parseHeader(mbus_data.frame);
+      t.parseHeader(mbus_data.frame);
       // if (t.parseHeader(mbus_data.frame) && t.addresses.empty()) {
       //   ESP_LOGE(TAG, "Address is empty! T: %s", telegram.c_str());
       // }
