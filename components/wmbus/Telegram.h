@@ -255,10 +255,10 @@ private:
     bool alreadyDecryptedCBC(std::vector<unsigned char>::iterator &pos);
     bool potentiallyDecrypt(std::vector<unsigned char>::iterator &pos);
     bool parseTPLConfig(std::vector<unsigned char>::iterator &pos);
-    static std::string toStringFromELLSN(int sn);
-    static std::string toStringFromTPLConfig(int cfg);
-    static std::string toStringFromAFLFC(int fc);
-    static std::string toStringFromAFLMC(int mc);
+    static string toStringFromELLSN(int sn);
+    static string toStringFromTPLConfig(int cfg);
+    static string toStringFromAFLFC(int fc);
+    static string toStringFromAFLMC(int mc);
 
     bool parseShortTPL(std::vector<unsigned char>::iterator &pos);
     bool parseLongTPL(std::vector<unsigned char>::iterator &pos);
