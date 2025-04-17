@@ -213,7 +213,7 @@ bool decrypt_ELL_AES_CTR(Telegram* t, vector<uchar>& frame, vector<uchar>::itera
     iv[i++] = 0;
 
     vector<uchar> ivv(iv, iv + 16);
-    string s = bin2hex(ivv);
+    std::string s = bin2hex(ivv);
     debug("(ELL) IV %s", s.c_str());
 
     int block = 0;
@@ -255,7 +255,7 @@ bool decrypt_ELL_AES_CTR(Telegram* t, vector<uchar>& frame, vector<uchar>::itera
     return true;
 }
 
-string frameTypeKamstrupC1(int ft) {
+std::string frameTypeKamstrupC1(int ft) {
     if (ft == 0x78) return "long frame";
     if (ft == 0x79) return "short frame";
     return "?";
@@ -339,7 +339,7 @@ bool decrypt_TPL_AES_CBC_IV(Telegram* t,
     for (int j = 0; j < 8; ++j) { iv[i++] = t->tpl_acc; }
 
     vector<uchar> ivv(iv, iv + 16);
-    string s = bin2hex(ivv);
+    std::string s = bin2hex(ivv);
     debug("(TPL) IV %s", s.c_str());
 
     uchar buffer_data[1000];
@@ -411,7 +411,7 @@ bool decrypt_TPL_AES_CBC_NO_IV(Telegram* t, vector<uchar>& frame, vector<uchar>:
     memset(iv, 0, sizeof(iv));
 
     vector<uchar> ivv(iv, iv + 16);
-    string s = bin2hex(ivv);
+    std::string s = bin2hex(ivv);
     debug("(TPL) IV %s", s.c_str());
 
     uchar buffer_data[1000];
@@ -520,7 +520,7 @@ void Telegram::print()
         debug("                device: %s", about.device.c_str());
         debug("                  rssi: %d dBm", about.rssi_dbm);
     }
-    string possible_drivers = autoDetectPossibleDrivers();
+    std::string possible_drivers = autoDetectPossibleDrivers();
     debug("                driver: %s", possible_drivers.c_str());
 }
 
@@ -528,9 +528,9 @@ void Telegram::printDLL()
 {
     if (about.type == FrameType::WMBUS)
     {
-        string possible_drivers = autoDetectPossibleDrivers();
+        std::string possible_drivers = autoDetectPossibleDrivers();
 
-        string man = manufacturerFlag(dll_mfct);
+        std::string man = manufacturerFlag(dll_mfct);
         debug("(telegram) DLL L=%02x C=%02x (%s) M=%04x (%s) A=%02x%02x%02x%02x VER=%02x TYPE=%02x (%s) (driver %s) DEV=%s RSSI=%d",
             dll_len,
             dll_c, cType(dll_c).c_str(),
@@ -559,7 +559,7 @@ void Telegram::printELL()
 {
     if (ell_ci == 0) return;
 
-    string ell_cc_info = ccType(ell_cc);
+    std::string ell_cc_info = ccType(ell_cc);
     verbose("(telegram) ELL CI=%02x CC=%02x (%s) ACC=%02x",
         ell_ci, ell_cc, ell_cc_info.c_str(), ell_acc);
 
@@ -598,7 +598,7 @@ void Telegram::printAFL()
 }
 
 
-string toStringFromTPLConfig(int cfg)
+string Telegram::toStringFromTPLConfig(int cfg)
 {
     string info = "";
     if (cfg & 0x8000) info += "bidirectional ";
@@ -1348,9 +1348,9 @@ bool Telegram::parseNWL(vector<uchar>::iterator& pos)
 }
 
 
-string toStringFromAFLFC(int fc)
+string Telegram::toStringFromAFLFC(int fc)
 {
-    string info = "";
+    std::string info = "";
     int fid = fc & 0x00ff; // Fragmend id
     info += std::to_string(fid);
     info += " ";
@@ -1366,7 +1366,7 @@ string toStringFromAFLFC(int fc)
 }
 
 
-string toStringFromAFLMC(int mc)
+string Telegram::toStringFromAFLMC(int mc)
 {
     string info = "";
     int at = mc & 0x0f;
