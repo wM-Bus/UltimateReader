@@ -1097,6 +1097,7 @@ bool parseDV(Telegram* t,
     size_t format_len,
     uint16_t* format_hash)
 {
+ return false;
      std::map<string, int> dv_count;
     vector<uchar> format_bytes;
     vector<uchar> id_bytes;
