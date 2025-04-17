@@ -1388,7 +1388,7 @@ bool Telegram::parseAFL(vector<uchar>::iterator& pos)
     int remaining = distance(pos, frame.end());
     if (remaining == 0) return false;
 
-    debug("(wmbus) parseAFL @%d %d", distance(frame.begin(), pos), remaining);
+    info("(wmbus) parseAFL @%d %d", distance(frame.begin(), pos), remaining);
 
     int ci_field = *pos;
     if (!isCiFieldOfType(ci_field, CI_TYPE::AFL)) return true;
@@ -2075,7 +2075,7 @@ bool Telegram::parseTPL(vector<uchar>::iterator& pos)
     int remaining = distance(pos, frame.end());
     if (remaining == 0) return false;
 
-    debug("(wmbus) parseTPL @%d %d", distance(frame.begin(), pos), remaining);
+    info("(wmbus) parseTPL @%d %d", distance(frame.begin(), pos), remaining);
 
     int ci_field = *pos;
     int mfct_specific = isCiFieldManufacturerSpecific(ci_field);
@@ -2199,16 +2199,16 @@ bool Telegram::parseWMBUSHeader(vector<uchar>& input_frame)
 
     ok = parseAFL(pos);
     if (!ok) return true;
- /*
+//
 
     ok = parseTPL(pos);
     if (!ok) return true;
 
     return true;
 
-    */
+    // */
  
-    return false;
+    // return false;
 }
 
 bool Telegram::parseWMBUS(vector<uchar>& input_frame, MeterKeys* mk, bool warn)
