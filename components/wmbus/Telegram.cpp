@@ -2175,8 +2175,8 @@ bool Telegram::parseWMBUSHeader(vector<uchar>& input_frame)
     decryption_failed = false;
     explanations.clear();
     suffix_size = 0;
-    frame = input_frame;
  /*
+    frame = input_frame;
     vector<uchar>::iterator pos = frame.begin();
     // Parsed accumulates parsed bytes.
     parsed.clear();
@@ -2204,6 +2204,8 @@ bool Telegram::parseWMBUSHeader(vector<uchar>& input_frame)
     return true;
 
     */
+ 
+    return false;
 }
 
 bool Telegram::parseWMBUS(vector<uchar>& input_frame, MeterKeys* mk, bool warn)
