@@ -173,7 +173,9 @@ namespace wmbus {
 
       this->frame_timestamp_ = this->time_->timestamp_now();
       send_to_clients(mbus_data);
+      AboutTelegram about{"ESPHome wM-Bus", mbus_data.rssi, FrameType::WMBUS, this->frame_timestamp_};
       Telegram t;
+      t.about = about;
       t.parseHeader(mbus_data.frame);
       // if (t.parseHeader(mbus_data.frame) && t.addresses.empty()) {
       //   ESP_LOGE(TAG, "Address is empty! T: %s", telegram.c_str());
