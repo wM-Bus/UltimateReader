@@ -2191,10 +2191,11 @@ bool Telegram::parseWMBUSHeader(vector<uchar>& input_frame)
     if (!ok) return true;
     // Could not decrypt stop here.
     if (decryption_failed) return true;
- /*
+ //
 
     ok = parseNWL(pos);
     if (!ok) return true;
+ /*
 
     ok = parseAFL(pos);
     if (!ok) return true;
