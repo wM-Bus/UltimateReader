@@ -975,13 +975,13 @@ string ciType(int ci_field)
 
 void Telegram::addExplanationAndIncrementPos(vector<uchar>::iterator& pos, int len, KindOfData k, Understanding u, const char* fmt, ...)
 {
-    char buf[1024];
-    buf[1023] = 0;
+    // char buf[1024];
+    // buf[1023] = 0;
 
-    va_list args;
-    va_start(args, fmt);
-    vsnprintf(buf, 1023, fmt, args);
-    va_end(args);
+    // va_list args;
+    // va_start(args, fmt);
+    // vsnprintf(buf, 1023, fmt, args);
+    // va_end(args);
 
     // Explanation e(parsed.size(), len, buf, k, u);
     // explanations.push_back(e);
