@@ -14,7 +14,7 @@ esphome:
   friendly_name: "${friendly_name}"
   name_add_mac_suffix: true
   platformio_options:
-    board_build.f_flash: 80000000L
+    upload_speed: 921600
     board_build.arduino.ldscript: esp32s3_out.ld
     board_build.arduino.partitions: default.csv
     board_build.arduino.memory_type: qio_qspi
@@ -22,164 +22,139 @@ esphome:
     name: wmbus.UltimateReader
     version: "1.2"
 
-
 esp32:
   board: esp32-s3-devkitc-1
   variant: esp32s3
+  flash_size: 8MB
   framework:
-    type: arduino
+    type: esp-idf
 
+external_components:
+  - source: github://wM-Bus/UltimateReader@version_5
+    refresh: 0d
 
-psram:
-
+dashboard_import:
+  package_import_url: github://wM-Bus/UltimateReader/UltimateReader.yaml@version_5
+  import_full_config: true
 
 logger:
   id: component_logger
   level: DEBUG
   baud_rate: 115200
 
-
-api:
-
-
-ota:
-  - platform: esphome
-
-
-dashboard_import:
-  package_import_url: github://wM-Bus/UltimateReader/UltimateReader.yaml@main
-  import_full_config: true
-
-
-external_components:
-  - source: github://wM-Bus/UltimateReader@main
-    refresh: 0d
-    components: [ wmbus ]
-
-
 wifi:
   ap:
 
-
 captive_portal:
-
 
 time:
   - platform: homeassistant
 
+api:
 
-# mqtt:
-#  broker: 10.0.0.88
-#  username: mqttUser
-#  password: mqttPass
-#  discovery: False   # disable entity discovery
-#  discover_ip: False # disable device discovery
+web_server:
+  version: 3 
 
+spi:
+  clk_pin:
+    number: GPIO5
+    ignore_strapping_warning: true
+  mosi_pin: GPIO27
+  miso_pin: GPIO19
 
-wmbus:
-  id: my_wmbus
-  led_blink_time: "123ms"
-  display_active: True
-  all_drivers: True
-  display_all: True
-  sync_mode: True
-  log_all: True
+socket_transmitter:
+  id: my_socket
+  ip_address: 10.0.0.22
+  port: 7227
+  protocol: UDP
 
-  # mqtt:
-  #   broker: 10.0.0.88
-  #   username: mqttUser
-  #   password: mqttPass
-  #   retain: True
+mqtt:
+  broker: test.mosquitto.org
+  port: 1883
+  client_id: some_client_id
 
-  # clients:
-  #   - name: "wmbusmeters"
-  #     ip_address: "10.0.0.22"
-  #     port: 7227
-  #     format: rtlwMBus
-  #     transport: UDP
+wmbus_radio:
+  radio_type: SX1276
+  cs_pin: GPIO18
+  reset_pin: GPIO14
+  irq_pin: GPIO35
+  on_frame:
+    - then:
+        - repeat:
+            count: 3
+            then: 
+              - output.turn_on: status_led
+              - delay: 100ms
+              - output.turn_off: status_led
+              - delay: 100ms
+    - mark_as_handled: True
+      then:
+        - mqtt.publish:
+            topic: wmbus-test/telegram_rtl
+            payload: !lambda return frame.as_rtlwmbus();
+    - mark_as_handled: True
+      then:
+        - wmbus_radio.send_frame_with_socket:
+            format: hex
 
+wmbus_meter:
+  - id: electricity_meter
+    meter_id: 0x0101010101
+    type: amiplus
+    key: SomeKey
+  - id: heat_meter
+    meter_id: 0x101010101
+    type: hydrocalm3
+    on_telegram:
+      then:
+        - wmbus_meter.send_telegram_with_mqtt:
+            topic: wmbus-test/telegram
+
+output:
+  - platform: gpio
+    id: vext_output
+    pin: GPIO21
+  - platform: gpio
+    id: oled_reset
+    pin: GPIO16
+    inverted: True
+  - platform: gpio
+    id: status_led
+    pin: GPIO25
 
 sensor:
   - platform: uptime
     type: seconds
     name: Ultimate Reader uptime
 
+  - platform: wmbus_meter
+    parent_id: heat_meter
+    field: total_heating_kwh
+    device_class: energy
+    name: Zużycie energii cieplnej
+    accuracy_decimals: 4
+    state_class: total_increasing
 
-# # add driver to compile list (will be available for autodetect), don't create sensor
-#   - platform: wmbus
-#     type: itron
+  - platform: wmbus_meter
+    parent_id: electricity_meter
+    field: current_power_consumption_kw
+    name: Moc aktualna
+    accuracy_decimals: 0
+    device_class: power
+    unit_of_measurement: W
+    state_class: measurement
+    filters:
+      - multiply: 1000
 
-# # add sensor with defined type (driver will be also added to compile list)
-#   - platform: wmbus
-#     meter_id: 0x12345678
-#     type: apator162
-#     key: "00000000000000000000000000000000"
-#     sensors:
-#       - name: "my hot water RSSi"
-#         field: "rssi"
-#         accuracy_decimals: 0
-#         unit_of_measurement: "dBm"
-#         device_class: "signal_strength"
-#         state_class: "measurement"
-#         entity_category: "diagnostic"
-#       - name: "my hot water"
-#         field: "total"
-#         accuracy_decimals: 3
-#         unit_of_measurement: "m³"
-#         device_class: "water"
-#         state_class: "total_increasing"
-#         icon: "mdi:water"
+  - platform: wmbus_meter
+    parent_id: electricity_meter
+    field: total_energy_consumption_kwh
+    name: Zużycie energii
+    accuracy_decimals: 3
+    device_class: energy
+    state_class: total_increasing
 
-# # add more sensors, one without field (name will be used)
-#   - platform: wmbus
-#     meter_id: 0xABCD4321
-#     type: amiplus
-#     sensors:
-#       - name: "my current power consumption in Watts"
-#         field: "current_power_consumption"
-#         accuracy_decimals: 1
-#         unit_of_measurement: "w"
-#         device_class: "power"
-#         state_class: "measurement"
-#         icon: "mdi:transmission-tower-import"
-#       - name: "total energy on T1"
-#         field: "total_energy_consumption_tariff_1"
-#         accuracy_decimals: 3
-#         unit_of_measurement: "kWh"
-#         device_class: "energy"
-#         state_class: "total_increasing"
-#         icon: "mdi:transmission-tower-import"
-#       - name: "voltage_at_phase_1"
-#         accuracy_decimals: 0
-#         unit_of_measurement: "V"
-#         device_class: "voltage"
-#         state_class: "measurement"
-#         icon: "mdi:sine-wave"
-
-# # sensor with offset, type should be autodetected, display on OLED
-#   - platform: wmbus
-#     meter_id: 0x11223344
-#     sensors:
-#       - name: "cold water from Apator NA-1"
-#         display: True
-#         field: "total"
-#         accuracy_decimals: 3
-#         unit_of_measurement: "m³"
-#         device_class: "water"
-#         state_class: "total_increasing"
-#         icon: "mdi:water"
-#         filters:
-#           - offset: 123.0
-
-# # if mqtt defined, JSON with all decoded fields will be published to broker
-#   - platform: wmbus
-#     meter_id: 0x22113366
-#     type: vario411
-
-# text_sensor:
-#   - platform: wmbus
-#     meter_id: 0xABCD1122
-#     type: izar
-#     sensors:
-#       - name: "Izar current_alarms"
-#         field: "current_alarms"
+  - platform: wmbus_meter
+    parent_id: electricity_meter
+    field: rssi
+    name: Electricity Meter RSSI
