@@ -2056,19 +2056,18 @@ bool Telegram::parse_TPL_7A(vector<uchar>::iterator& pos)
 
     bool decrypt_ok = potentiallyDecrypt(pos);
 
-    // header_size = distance(frame.begin(), pos);
-    // int remaining = distance(pos, frame.end()) - suffix_size;
+    header_size = distance(frame.begin(), pos);
+    int remaining = distance(pos, frame.end()) - suffix_size;
 
-    // if (decrypt_ok)
-    // {
-    //     parseDV(this, frame, pos, remaining, &dv_entries);
-    // }
-    // else
-    // {
-    //     decryption_failed = true;
-    // }
-    // return true;
-    return false;
+    if (decrypt_ok)
+    {
+        // parseDV(this, frame, pos, remaining, &dv_entries);
+    }
+    else
+    {
+        decryption_failed = true;
+    }
+    return true;
 }
 
 bool Telegram::parseTPL(vector<uchar>::iterator& pos)
