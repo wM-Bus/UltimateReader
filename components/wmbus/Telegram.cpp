@@ -2061,7 +2061,7 @@ bool Telegram::parse_TPL_7A(vector<uchar>::iterator& pos)
 
     if (decrypt_ok)
     {
-        // parseDV(this, frame, pos, remaining, &dv_entries);
+        parseDV(this, frame, pos, remaining, &dv_entries);
     }
     else
     {
