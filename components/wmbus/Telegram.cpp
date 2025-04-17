@@ -597,7 +597,7 @@ void Telegram::printAFL()
 
 }
 
-string TtoStringFromELLSN(int sn)
+string Telegram::toStringFromELLSN(int sn)
 {
     int session = (sn >> 0)  & 0x0f; // lowest 4 bits
     int time = (sn >> 4)  & 0x1ffffff; // next 25 bits
@@ -612,7 +612,7 @@ string TtoStringFromELLSN(int sn)
     return info;
 }
 
-string toStringFromTPLConfig(int cfg)
+string Telegram::toStringFromTPLConfig(int cfg)
 {
     string info = "";
     if (cfg & 0x8000) info += "bidirectional ";
@@ -1362,7 +1362,7 @@ bool Telegram::parseNWL(vector<uchar>::iterator& pos)
 }
 
 
-string toStringFromAFLFC(int fc)
+string Telegram::toStringFromAFLFC(int fc)
 {
     std::string info = "";
     int fid = fc & 0x00ff; // Fragmend id
@@ -1380,7 +1380,7 @@ string toStringFromAFLFC(int fc)
 }
 
 
-string toStringFromAFLMC(int mc)
+string Telegram::toStringFromAFLMC(int mc)
 {
     string info = "";
     int at = mc & 0x0f;
