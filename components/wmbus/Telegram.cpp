@@ -2101,30 +2101,35 @@ bool Telegram::parseTPL(vector<uchar>::iterator& pos)
 
     if (remaining < len + 1 && !mfct_specific) return expectedMore(__LINE__);
 
-    // switch (tpl_ci)
-     // {
-     // case CI_Field_Values::TPL_72: return parse_TPL_72(pos);
-     // case CI_Field_Values::TPL_78: return parse_TPL_78(pos);
-     // case CI_Field_Values::TPL_79: return parse_TPL_79(pos);
-     // case CI_Field_Values::TPL_7A: return parse_TPL_7A(pos);
-     // default:
-     // {
-     //     // A0 to B7 are manufacturer specific.
-     //     header_size = distance(frame.begin(), pos);
-     //     int num_mfct_bytes = frame.end() - pos - suffix_size;
-     //     string info = bin2hex(pos, frame.end(), num_mfct_bytes);
-     //     info += " mfct specific";
+    warning("(wmbus) tpl-ci %02x", tpl_ci);
+
+    switch (tpl_ci)
+     {
+     case CI_Field_Values::TPL_72: return parse_TPL_72(pos);
+     case CI_Field_Values::TPL_78: return parse_TPL_78(pos);
+     case CI_Field_Values::TPL_79: return parse_TPL_79(pos);
+     case CI_Field_Values::TPL_7A: return parse_TPL_7A(pos);
+     default:
+     {
+         // A0 to B7 are manufacturer specific.
+         // header_size = distance(frame.begin(), pos);
+         // int num_mfct_bytes = frame.end() - pos - suffix_size;
+         // string info = bin2hex(pos, frame.end(), num_mfct_bytes);
+         // info += " mfct specific";
      //     addExplanationAndIncrementPos(pos, num_mfct_bytes, KindOfData::CONTENT, Understanding::NONE, info.c_str());
  
-     //     return true; // Manufacturer specific telegram payload. Oh well....
-     // }
-    // }
+         // return true; // Manufacturer specific telegram payload. Oh well....
+
+      
+        return false;
+     }
+    }
 
     header_size = distance(frame.begin(), pos);
-    if (parser_warns_)
-    {
+    // if (parser_warns_)
+    // {
         warning("(wmbus) Not implemented tpl-ci %02x", tpl_ci);
-    }
+    // }
     return false;
 }
 
