@@ -179,7 +179,7 @@ namespace wmbus {
         ESP_LOGE(TAG, "Address is empty! T: %s", telegram.c_str());
       }
       // else {
-      //   uint32_t meter_id = (uint32_t)strtoul(t.addresses[0].id.c_str(), nullptr, 16);
+        uint32_t meter_id = (uint32_t)strtoul(t.addresses[0].id.c_str(), nullptr, 16);
         bool meter_in_config = (this->wmbus_listeners_.count(meter_id) == 1) ? true : false;
         // // // // // // // // // // // // // // // // // //
 
