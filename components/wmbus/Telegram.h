@@ -9,6 +9,7 @@
 #include"address.h"
 
 using namespace wmbusmeters;
+using namespace std;
 
 struct AboutTelegram
 {
