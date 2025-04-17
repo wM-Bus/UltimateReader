@@ -2195,10 +2195,11 @@ bool Telegram::parseWMBUSHeader(vector<uchar>& input_frame)
 
     ok = parseNWL(pos);
     if (!ok) return true;
- /*
+//
 
     ok = parseAFL(pos);
     if (!ok) return true;
+ /*
 
     ok = parseTPL(pos);
     if (!ok) return true;
