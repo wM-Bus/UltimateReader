@@ -2181,7 +2181,7 @@ bool Telegram::parseWMBUSHeader(vector<uchar>& input_frame)
     parsed.clear();
     // Fixes quirks from non-compliant meters to make telegram compatible with the standard
     preProcess();
- /*
+//
 
     ok = parseDLL(pos);
     if (!ok) return false;
@@ -2191,6 +2191,7 @@ bool Telegram::parseWMBUSHeader(vector<uchar>& input_frame)
     if (!ok) return true;
     // Could not decrypt stop here.
     if (decryption_failed) return true;
+ /*
 
     ok = parseNWL(pos);
     if (!ok) return true;
