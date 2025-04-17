@@ -166,6 +166,14 @@ namespace wmbus {
     this->led_handler();
     if (rf_mbus_.task()) {
       ESP_LOGI(TAG, "Have data from radio ...");
+      WMbusFrame mbus_data = rf_mbus_.get_frame();
+
+      std::string telegram = format_hex_pretty(mbus_data.frame);
+      telegram.erase(std::remove(telegram.begin(), telegram.end(), '.'), telegram.end());
+
+      this->frame_timestamp_ = this->time_->timestamp_now();
+      send_to_clients(mbus_data);
+      Telegram t;
     }
     if (false) {
       ESP_LOGVV(TAG, "Have data from radio ...");
