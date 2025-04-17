@@ -1472,11 +1472,6 @@ bool parseDV(Telegram *t,
 
         DVEntry *dve = &(*dv_entries)[key].second;
 
-        if (isTraceEnabled())
-        {
-            trace("[DVPARSER] entry %s\n", dve->str().c_str());
-        }
-
         assert(key == dve->dif_vif_key.str());
 
         if (value.length() > 0) {
