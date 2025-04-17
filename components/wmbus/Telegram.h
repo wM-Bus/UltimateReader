@@ -65,8 +65,6 @@ public:
 
     AboutTelegram about;
 
-    Meter *meter {};
-
     // If set to true then this telegram should be trigger updates.
     bool discard {};
 
