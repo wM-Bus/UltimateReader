@@ -204,12 +204,12 @@ public:
     void addExplanationAndIncrementPos(std::vector<unsigned char>::iterator &pos, int len, KindOfData k, Understanding u, const char* fmt, ...);
     void setExplanation(std::vector<unsigned char>::iterator &pos, int len, KindOfData k, Understanding u, const char* fmt, ...);
     void addMoreExplanation(int pos, const char* fmt, ...);
-    void addMoreExplanation(int pos, string json);
+    void addMoreExplanation(int pos, std::string json);
 
     // Add an explanation of data inside manufacturer specific data.
     void addSpecialExplanation(int offset, int len, KindOfData k, Understanding u, const char* fmt, ...);
-    void explainParse(string intro, int from);
-    string analyzeParse(OutputFormat o, int *content_length, int *understood_content_length);
+    void explainParse(std::string intro, int from);
+    std::string analyzeParse(OutputFormat o, int *content_length, int *understood_content_length);
 
     bool parserWarns() { return parser_warns_; }
     bool isSimulated() { return is_simulated_; }
@@ -221,7 +221,7 @@ public:
     // Mapped from their key for quick access to their offset and content.
     std::map<std::string,std::pair<int,DVEntry>> dv_entries;
 
-    string autoDetectPossibleDrivers();
+    std::string autoDetectPossibleDrivers();
 
     // part of original telegram bytes, only filled if pre-processing modifies it
     std::vector<unsigned char> original;
@@ -257,10 +257,10 @@ private:
     bool alreadyDecryptedCBC(std::vector<unsigned char>::iterator &pos);
     bool potentiallyDecrypt(std::vector<unsigned char>::iterator &pos);
     bool parseTPLConfig(std::vector<unsigned char>::iterator &pos);
-    static string toStringFromELLSN(int sn);
-    static string toStringFromTPLConfig(int cfg);
-    static string toStringFromAFLFC(int fc);
-    static string toStringFromAFLMC(int mc);
+    static std::string toStringFromELLSN(int sn);
+    static std::string toStringFromTPLConfig(int cfg);
+    static std::string toStringFromAFLFC(int fc);
+    static std::string toStringFromAFLMC(int mc);
 
     bool parseShortTPL(std::vector<unsigned char>::iterator &pos);
     bool parseLongTPL(std::vector<unsigned char>::iterator &pos);
