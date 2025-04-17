@@ -164,6 +164,9 @@ namespace wmbus {
   void WMBusComponent::loop() {
     uint8_t forMe = 74;
     this->led_handler();
+    if (rf_mbus_.task()) {
+      ESP_LOGI(TAG, "Have data from radio ...");
+    }
     if (false) {
       ESP_LOGVV(TAG, "Have data from radio ...");
       WMbusFrame mbus_data = rf_mbus_.get_frame();
