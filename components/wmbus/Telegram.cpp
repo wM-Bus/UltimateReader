@@ -2056,18 +2056,19 @@ bool Telegram::parse_TPL_7A(vector<uchar>::iterator& pos)
 
     bool decrypt_ok = potentiallyDecrypt(pos);
 
-    header_size = distance(frame.begin(), pos);
-    int remaining = distance(pos, frame.end()) - suffix_size;
+    // header_size = distance(frame.begin(), pos);
+    // int remaining = distance(pos, frame.end()) - suffix_size;
 
-    if (decrypt_ok)
-    {
-        parseDV(this, frame, pos, remaining, &dv_entries);
-    }
-    else
-    {
-        decryption_failed = true;
-    }
-    return true;
+    // if (decrypt_ok)
+    // {
+    //     parseDV(this, frame, pos, remaining, &dv_entries);
+    // }
+    // else
+    // {
+    //     decryption_failed = true;
+    // }
+    // return true;
+    return false;
 }
 
 bool Telegram::parseTPL(vector<uchar>::iterator& pos)
@@ -2112,16 +2113,13 @@ bool Telegram::parseTPL(vector<uchar>::iterator& pos)
      default:
      {
          // A0 to B7 are manufacturer specific.
-         // header_size = distance(frame.begin(), pos);
-         // int num_mfct_bytes = frame.end() - pos - suffix_size;
-         // string info = bin2hex(pos, frame.end(), num_mfct_bytes);
-         // info += " mfct specific";
-     //     addExplanationAndIncrementPos(pos, num_mfct_bytes, KindOfData::CONTENT, Understanding::NONE, info.c_str());
+         header_size = distance(frame.begin(), pos);
+         int num_mfct_bytes = frame.end() - pos - suffix_size;
+         string info = bin2hex(pos, frame.end(), num_mfct_bytes);
+         info += " mfct specific";
+         addExplanationAndIncrementPos(pos, num_mfct_bytes, KindOfData::CONTENT, Understanding::NONE, info.c_str());
  
-         // return true; // Manufacturer specific telegram payload. Oh well....
-
-      
-        return false;
+         return true; // Manufacturer specific telegram payload. Oh well....
      }
     }
 
