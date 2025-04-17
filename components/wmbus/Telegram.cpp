@@ -2153,13 +2153,13 @@ bool Telegram::parse(vector<uchar>& input_frame, MeterKeys* mk, bool warn)
 
 bool Telegram::parseHeader(vector<uchar>& input_frame)
 {
-    switch (about.type)
-    {
-    case FrameType::WMBUS: return parseWMBUSHeader(input_frame);
-    case FrameType::MBUS: return parseMBUSHeader(input_frame);
-    case FrameType::HAN: return parseHANHeader(input_frame);
-    }
-    assert(0);
+    // switch (about.type)
+    // {
+    // case FrameType::WMBUS: return parseWMBUSHeader(input_frame);
+    // case FrameType::MBUS: return parseMBUSHeader(input_frame);
+    // case FrameType::HAN: return parseHANHeader(input_frame);
+    // }
+    // assert(0);
     return false;
 }
 
