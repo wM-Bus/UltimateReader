@@ -76,10 +76,10 @@ async def to_code(config):
             if s[CONF_DISPLAY]:
                 display += 1
             if display > 1:
-                print(color(Fore.RED, f"only one field per sensor can be displayed '{config[CONF_METER_ID]}'!"))
+                print(color(AnsiFore.RED, f"only one field per sensor can be displayed '{config[CONF_METER_ID]}'!"))
                 exit()
             if CONF_UNIT_OF_MEASUREMENT not in s:
-                print(color(Fore.RED, f"unit_of_measurement not defined for sensor '{s[CONF_NAME]}'!"))
+                print(color(AnsiFore.RED, f"unit_of_measurement not defined for sensor '{s[CONF_NAME]}'!"))
                 exit()
             if (s[CONF_FIELD]):
                 field = s[CONF_FIELD].lower()
