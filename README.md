@@ -1,3 +1,5 @@
+![](https://github.com/SzczepanLeon/wmbus-supla/blob/master/docs/logo.png)
+
 [!["Buy Me A Coffee"](https://github.com/SzczepanLeon/esphome-components/blob/version_4/docs/buy_me_coffe.png)](https://www.buymeacoffee.com/szczepan)
 
 [!["Kup mi kawę"](https://github.com/SzczepanLeon/esphome-components/blob/version_4/docs/postaw_kawe.png)](https://buycoffee.to/szczepanleon)
