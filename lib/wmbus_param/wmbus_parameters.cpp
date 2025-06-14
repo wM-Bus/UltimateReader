@@ -215,6 +215,10 @@ void WmbusParameters::send(Supla::WebSender *sender) {
                  "meterChanged(2);"
                  "meterChanged(3);"
                  "meterChanged(4);"
+                 "meterChanged(5);"
+                 "meterChanged(6);"
+                 "meterChanged(7);"
+                 "meterChanged(8);"
                  "</script>");
   }
 }
