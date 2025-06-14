@@ -1,0 +1,357 @@
+# For more information please visit: https://github.com/SzczepanLeon/esphome-components
+# If you want, you can buy me a coffee:
+#     https://www.buymeacoffee.com/szczepan
+#     https://buycoffee.to/szczepanleon
+
+substitutions:
+  name: "ultimatereader"
+  friendly_name: "Ultimate Reader"
+
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+esphome:
+  name: "${name}"
+  friendly_name: "${friendly_name}"
+  name_add_mac_suffix: false
+  platformio_options:
+    upload_speed: 921600
+    board_build.f_flash: 80000000L
+    board_build.arduino.ldscript: esp32s3_out.ld
+    board_build.arduino.partitions: default.csv
+    board_build.arduino.memory_type: qio_qspi
+  project:
+    name: wmbus.UltimateReader
+    version: "1.2.5"
+
+esp32:
+  board: esp32-s3-devkitc-1
+  # board: lilygo-t3-s3
+  variant: esp32s3
+  framework:
+    type: esp-idf
+    version: latest
+
+external_components:
+  - source: github://SzczepanLeon/esphome-components/components@main
+    refresh: 0d
+
+dashboard_import:
+  package_import_url: github://wM-Bus/UltimateReader/UltimateReader_v5.yaml@main
+  import_full_config: true
+
+logger:
+  id: component_logger
+  level: DEBUG
+  baud_rate: 115200
+  logs:
+    wmbus: INFO
+  #   wmbus.packet: DEBUG
+
+psram:
+
+wifi:
+  networks:
+  - ssid: "MyWiFi"
+    password: "qwerty12345678"
+  - ssid: "MyWiFiIoT"
+    password: "qwerty12345678"
+    hidden: true
+  ap:
+
+captive_portal:
+
+time:
+  - platform: homeassistant
+
+api:
+
+ota:
+  - platform: esphome
+
+web_server:
+  version: 3 
+
+# font:
+#   - file: "gfonts://Roboto"
+#     id: roboto_20
+#     size: 20
+
+# i2c:
+#   sda: GPIO18
+#   scl: GPIO17
+#   scan: True
+
+# display:
+#   - platform: ssd1306_i2c
+#     id: displ
+#     model: "SSD1306 128x64"
+#     address: 0x3C
+#     # lambda: |-
+#     #   it.print(0, 10, id(roboto_20), "ESPHome wM-Bus");
+
+spi:
+  clk_pin:
+    number: GPIO5
+    # ignore_strapping_warning: true
+  mosi_pin: GPIO6
+  miso_pin:
+    number: GPIO3
+    ignore_strapping_warning: true
+
+socket_transmitter:
+  id: my_socket
+  ip_address: 10.0.0.27
+  port: 7117
+  protocol: UDP
+
+debug:
+  update_interval: 5s
+
+mqtt:
+  broker: test.mosquitto.org
+  port: 1883
+
+wmbus_radio:
+  radio_type: SX1276
+  cs_pin: GPIO7
+  reset_pin: GPIO8
+  irq_pin: GPIO33
+  on_frame:
+    - then:
+        - logger.log:
+            format: "RSSI: %ddBm T: %s (%d) %s"
+            args: [ frame->rssi(), frame->as_hex().c_str(), frame->data().size(), toString(frame->link_mode()) ]
+    - then:
+        - repeat:
+            count: 3
+            then:
+              - output.turn_on: status_led
+              - delay: 100ms
+              - output.turn_off: status_led
+              - delay: 100ms
+    # - mark_as_handled: False
+    #   then:
+    #     - mqtt.publish:
+    #         topic: wmbus-test/telegram_rtl
+    #         payload: !lambda return frame->as_rtlwmbus();
+    # - mark_as_handled: False
+    #   then:
+    #     - socket_transmitter.send:
+    #         data: !lambda return frame->as_hex();
+    - then:
+        - mqtt.publish:
+            topic: wmbus-test/telegram_hex
+            payload: !lambda return frame->as_hex();
+    - then:
+        - socket_transmitter.send:
+            data: !lambda return frame->as_rtlwmbus();
+
+wmbus_common:
+  drivers: all
+
+wmbus_meter:
+  - id: test_meter_with_dummy
+    meter_id: 0x12345678
+    type: compact5
+  - id: izar_01_water_meter
+    meter_id: 0x12345677
+    type: izar
+    mode: 
+      - T1
+      - C1
+  - id: izar_02_water_meter
+    meter_id: 0x12345688
+    type: izar
+    on_telegram:
+      then:
+        - wmbus_meter.send_telegram_with_mqtt:
+            topic: wmbus-test/telegram
+  - id: izar_03_water_meter
+    meter_id: 0x12345699
+    type: izar
+    on_telegram:
+      then:
+        - wmbus_meter.send_telegram_with_mqtt:
+            topic: wmbus-test/telegram_izar
+  - id: izar_04_water_meter
+    meter_id: 0x12345611
+    type: izar
+  - id: izar_05_water_meter
+    meter_id: 0x12345622
+    type: izar
+  - id: cold_water_meter
+    meter_id: 0x12345644
+    type: izar
+  - id: hot_water_meter
+    meter_id: 0x12345610
+    type: evo868
+  - id: garden_water_meter
+    meter_id: 0x12345123
+    type: apator162
+    key: "00000000000000000000000000000000"
+
+output:
+  - platform: gpio
+    id: status_led
+    pin:
+      number: GPIO37
+
+sensor:
+  - platform: wifi_signal
+    name: "WiFi Signal dB"
+    id: wifi_signal_db
+    update_interval: 60s
+    entity_category: "diagnostic"
+
+  - platform: copy
+    source_id: wifi_signal_db
+    name: "WiFi Signal %"
+    filters:
+      - lambda: return {min(max(2 * (x + 100.0), 0.0), 100.0)};
+    unit_of_measurement: "%"
+    entity_category: "diagnostic"
+
+  - platform: internal_temperature
+    name: "Internal Temperature"
+
+  - platform: debug
+    free:
+      name: "Heap Free"
+    loop_time:
+      name: "Loop Time"
+
+  - platform: uptime
+    type: seconds
+    name: Ultimate Reader uptime
+
+  - platform: wmbus_meter
+    parent_id: izar_01_water_meter
+    field: total_m3
+    name: Izar 01 Water Meter total m3
+    accuracy_decimals: 3
+    unit_of_measurement: "m³"
+    device_class: "water"
+    state_class: "total_increasing"
+    icon: "mdi:water"
+
+  - platform: wmbus_meter
+    parent_id: izar_01_water_meter
+    field: rssi_dbm
+    name: Izar 01 Water Meter RSSI
+
+  - platform: wmbus_meter
+    parent_id: izar_02_water_meter
+    field: total_m3
+    name: Izar 02 Water Meter total m3
+    accuracy_decimals: 3
+    unit_of_measurement: "m³"
+    device_class: "water"
+    state_class: "total_increasing"
+    icon: "mdi:water"
+
+  - platform: wmbus_meter
+    parent_id: izar_02_water_meter
+    field: rssi_dbm
+    name: Izar 02 Water Meter RSSI
+
+  - platform: wmbus_meter
+    parent_id: izar_03_water_meter
+    field: total_m3
+    name: Izar 03 Water Meter total m3
+    accuracy_decimals: 3
+    unit_of_measurement: "m³"
+    device_class: "water"
+    state_class: "total_increasing"
+    icon: "mdi:water"
+
+  - platform: wmbus_meter
+    parent_id: izar_03_water_meter
+    field: rssi_dbm
+    name: Izar 03 Water Meter RSSI
+
+  - platform: wmbus_meter
+    parent_id: izar_05_water_meter
+    field: rssi_dbm
+    name: Izar 05 Water Meter RSSI
+
+  - platform: wmbus_meter
+    parent_id: izar_01_water_meter
+    field: timestamp
+    name: Izar 01 Water Meter timestamp
+
+  - platform: wmbus_meter
+    parent_id: izar_02_water_meter
+    field: timestamp
+    name: Izar 02 Water Meter timestamp
+
+  - platform: wmbus_meter
+    parent_id: izar_03_water_meter
+    field: timestamp
+    name: Izar 03 Water Meter timestamp
+
+  - platform: wmbus_meter
+    parent_id: cold_water_meter
+    field: total_m3
+    name: Cold Water Meter total m3
+    accuracy_decimals: 3
+    unit_of_measurement: "m³"
+    device_class: "water"
+    state_class: "total_increasing"
+    icon: "mdi:water"
+
+  - platform: wmbus_meter
+    parent_id: cold_water_meter
+    field: rssi_dbm
+    name: Cold Water Meter RSSI
+
+  - platform: wmbus_meter
+    parent_id: hot_water_meter
+    field: total_m3
+    name: Hot Water Meter total m3
+    accuracy_decimals: 3
+    unit_of_measurement: "m³"
+    device_class: "water"
+    state_class: "total_increasing"
+    icon: "mdi:water"
+
+  - platform: wmbus_meter
+    parent_id: hot_water_meter
+    field: rssi_dbm
+    name: Hot Water Meter RSSI
+
+  - platform: wmbus_meter
+    parent_id: garden_water_meter
+    field: total_m3
+    name: Garden Water Meter total m3
+    accuracy_decimals: 3
+    unit_of_measurement: "m³"
+    device_class: "water"
+    state_class: "total_increasing"
+    icon: "mdi:water"
+
+  - platform: wmbus_meter
+    parent_id: garden_water_meter
+    field: rssi_dbm
+    name: Garden Water Meter RSSI
+
+text_sensor:
+  - platform: debug
+    device:
+      name: "Device Info"
+    reset_reason:
+      name: "Reset Reason"
+
+  - platform: wmbus_meter
+    parent_id: cold_water_meter
+    field: timestamp
+    name: Cold Water Meter timestamp human
+
+  - platform: wmbus_meter
+    parent_id: cold_water_meter
+    field: timestamp_zulu
+    name: Cold Water Meter timestamp zulu
+
+  - platform: wmbus_meter
+    parent_id: cold_water_meter
+    field: current_alarms
+    name: Cold Water Meter alarms text
