@@ -103,11 +103,12 @@ void WmbusParameters::send(Supla::WebSender *sender) {
     // SUPLA_LOG_INFO("TYPE %s | %s", typeKey.c_str(), typeBuf);
 
     std::vector<std::string> all_types{
-        "amiplus",    "apatoreitn", "apator08", "apator162", "bmeters",
-        "c5isf",      "compact5",   "elf",      "evo868",    "fhkvdataiii",
-        "hydrocalm3", "hydrus",     "itron",    "izar",      "mkradio3",
-        "mkradio4",   "qheat",      "qwater",   "sharky774", "topaseskr",
-        "ultrimis",   "unismart",   "vario451",
+        "amiplus",     "apatoreitn", "apator08",   "apator162", "bmeters",
+        "c5isf",       "compact5",   "dme07",      "elf",       "evo868",
+        "fhkvdataiii", "flowiq2200", "hydrocalm3", "hydrus",    "hydrodigit",
+        "itron",       "izar",       "kamheat",    "mkradio3",  "mkradio4",
+        "mkradio4a",   "multical21", "qheat",      "qwater",    "rfmtx1",
+        "sharky774",   "topaseskr",  "ultrimis",   "unismart",  "vario451",
     };
 
     // form-field BEGIN
@@ -287,7 +288,6 @@ bool WmbusParameters::isMeterSelected(const char *meter,
   char result[80] = {};
   this->cfg->getString(meter, result, 80);
   // this->cfg->getInt8(meter, &result);
-  // SUPLA_LOG_INFO("isMeterSelected %s | %s | %s", meter, meter_type, result);
   if (strcmp(meter_type, result) == 0) {
     // if (meter_type == result) {
     return true;
@@ -307,7 +307,6 @@ int8_t WmbusParameters::getMeter(const char *meter) {
 }
 
 bool WmbusParameters::setMeterKey(const char *meter, const char *key) {
-  // SUPLA_LOG_INFO("setMeterKey %s | %d", meter, strlen(key));
   if (strlen(key) > 33) {
     return false;
   }

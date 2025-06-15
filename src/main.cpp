@@ -187,7 +187,7 @@ void setup() {
   SuplaDevice.setSupla3rdPartyCACert(supla3rdCACert);
 
   SuplaDevice.setName("wM-Bus SUPLA");
-  SuplaDevice.setSwVersion("25.2");
+  SuplaDevice.setSwVersion("25.02-0.0.1");
 
   auto mqtt = new Supla::Protocol::EspMqtt(&SuplaDevice);
 
@@ -216,18 +216,25 @@ void setup() {
   add_driver(new Bmeters());
   add_driver(new C5isf());
   add_driver(new Compact5());
+  add_driver(new Dme07());
   add_driver(new Elf());
   add_driver(new Evo868());
   add_driver(new FhkvdataIII());
+  add_driver(new Flowiq2200());
   add_driver(new Hydrocalm3());
   add_driver(new Hydrus());
+  add_driver(new Hydrodigit());
   add_driver(new Iperl());
   add_driver(new Itron());
   add_driver(new Izar());
+  add_driver(new Kamheat());
   add_driver(new Mkradio3());
   add_driver(new Mkradio4());
+  add_driver(new Mkradio4a());
+  add_driver(new Multical21());
   add_driver(new Qheat());
   add_driver(new Qwater());
+  add_driver(new Rfmtx1());
   add_driver(new Sharky774());
   add_driver(new TopasESKR());
   add_driver(new Ultrimis());
@@ -248,7 +255,6 @@ void setup() {
 
 void loop() {
   SuplaDevice.iterate();
-  //
   if (rf_ready && rf_mbus_.task()) {
     esphome::wmbus::WMbusFrame mbus_data = rf_mbus_.get_frame();
     std::vector<unsigned char> frame = mbus_data.frame;
@@ -287,7 +293,6 @@ void loop() {
                   (unsigned _supla_int64_t)(ele.second);
               SUPLA_LOG_INFO("Uzyskalem dane %s = %.3f", ele.first.c_str(),
                              ele.second);
-              // pomiar = (unsigned _supla_int64_t)(ele.second);
               pomiar = (unsigned _supla_int64_t)(ele.second * 1000);
               meter->sensors_[ele.first]->update(pomiar);
             }
