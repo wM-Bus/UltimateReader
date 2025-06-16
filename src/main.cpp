@@ -267,8 +267,8 @@ void loop() {
                         ((uint32_t)frame[6] << 16) | ((uint32_t)frame[5] << 8) |
                         ((uint32_t)frame[4]);
 
-    SUPLA_LOG_INFO("Meter ID [0x%08X] RSSI: %d dBm LQI: %d T: %s", meter_id,
-                   mbus_data.rssi, mbus_data.lqi, telegram.c_str());
+    SUPLA_LOG_INFO("Meter ID [0x%08X] RSSI: %d dBm T: %s", meter_id,
+                   mbus_data.rssi, telegram.c_str());
 
     if (meters_.count(meter_id) > 0) {
       auto *meter = meters_[meter_id];
@@ -280,10 +280,9 @@ void loop() {
         }
 
         auto selected_driver = drivers_[meter->type];
-        SUPLA_LOG_INFO(
-            "Using driver '%s' for ID [0x%08X] RSSI: %d dBm LQI: %d T: %s",
-            selected_driver->get_name().c_str(), meter_id, mbus_data.rssi,
-            mbus_data.lqi, telegram.c_str());
+        SUPLA_LOG_INFO("Using driver '%s' for ID [0x%08X] RSSI: %d dBm T: %s",
+                       selected_driver->get_name().c_str(), meter_id,
+                       mbus_data.rssi, telegram.c_str());
 
         auto mapValues = selected_driver->get_values(frame);
         if (mapValues.has_value()) {
