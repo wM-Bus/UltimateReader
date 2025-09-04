@@ -1,8 +1,6 @@
 packages:
-  hal: !include
-    file: packages/lilygo_t3_s3_hal.yaml
-  wmbus_gateway: !include
-    file: packages/wmbus_gateway.yaml
+  hal: github://wM-Bus/UltimateReader/packages/lilygo_t3_s3_hal.yaml@IoTLabs
+  wmbus_gateway: github://wM-Bus/UltimateReader/packages/wmbus_gateway.yaml@IoTLabs
 
 esphome:
   name: ultimatereader
