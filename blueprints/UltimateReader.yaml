@@ -28,6 +28,13 @@ ota:
 #   username: !secret mqtt_username
 #   password: !secret mqtt_password
 
+wmbus_common:
+    drivers: all
+    # or specify specific drivers
+#    drivers:
+#      - apator162
+#      - amiplus
+
 wmbus_radio:
   # This part of config is responsible for listening to any wM-Bus frames.
   # The same part of config is present in the factory firmware. 
