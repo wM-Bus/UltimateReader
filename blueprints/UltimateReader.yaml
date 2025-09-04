@@ -2,6 +2,15 @@ packages:
   hal: github://wM-Bus/UltimateReader/packages/lilygo_t3_s3_hal.yaml@IoTLabs
   wmbus_gateway: github://wM-Bus/UltimateReader/packages/wmbus_gateway.yaml@IoTLabs
 
+esphome:
+  name: ultimatereader
+  friendly_name: Ultimate Reader
+  name_add_mac_suffix: true
+  comment: Ultimate Reader
+  project:
+    name: wmbus.UltimateReader
+    version: ${wmbus_gateway_version}
+
 logger:
   level: debug
   baud_rate: 115200
