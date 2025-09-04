@@ -28,9 +28,9 @@ ota:
 #   username: !secret mqtt_username
 #   password: !secret mqtt_password
 
-wmbus_common:
-    drivers: all
-    # or specify specific drivers
+# wmbus_common:
+#    drivers: all
+#     # or specify specific drivers
 #    drivers:
 #      - apator162
 #      - amiplus
