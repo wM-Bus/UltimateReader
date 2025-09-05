@@ -12,7 +12,9 @@ esphome:
     version: ${wmbus_gateway_version}
 
 logger:
-  level: debug
+  level: INFO
+  logs:
+    light: INFO
   baud_rate: 115200
 
 # If you want to connect with HA, you need to enable API.
