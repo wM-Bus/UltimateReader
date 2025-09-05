@@ -1,0 +1,61 @@
+esphome:
+  platformio_options:
+    board_build.flash_mode: dio
+    upload_speed: 921600
+
+esp32:
+  board: esp32-s3-devkitc-1
+  variant: esp32s3
+  flash_size: 16MB  
+  framework:
+    type: esp-idf
+    sdkconfig_options:
+      CONFIG_ESP32_S3_BOX_BOARD: "y"
+
+psram:
+  mode: octal
+  speed: 80MHz
+
+captive_portal:
+
+spi:
+  clk_pin:
+    number: GPIO5
+  mosi_pin: GPIO6
+  miso_pin:
+    number: GPIO3
+    ignore_strapping_warning: true
+
+wmbus_radio:
+  radio_type: SX1276
+  cs_pin: GPIO7
+  reset_pin: GPIO8
+  irq_pin: GPIO33
+
+i2c:
+  frequency: 800kHz
+  scan: False
+  sda: GPIO18
+  scl: GPIO17
+
+display:
+  - platform: ssd1306_i2c
+    model: SSD1306 128x64
+    address: 0x3C
+    auto_clear_enabled: True
+    contrast: 50%
+    update_interval: never
+
+light:
+  - platform: status_led
+    id: wmbus_gateway_status_led
+    pin: GPIO37
+
+binary_sensor:
+  - platform: gpio
+    id: ext_button
+    pin:
+      number: GPIO0
+      ignore_strapping_warning: true
+      mode: input
+      inverted: True
