@@ -42,8 +42,8 @@ text_sensor:
 external_components:
   - source: 
       type: git
-      url: https://github.com/IoTLabs-pl/ESPHome-Components
-      ref: ${esphome_components_version}
+      url: https://github.com/SzczepanLeon/IoTLabs_ESPHome-Components/
+      ref: master
     components:
       - wmbus_common
       - wmbus_radio
