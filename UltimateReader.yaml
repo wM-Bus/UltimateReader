@@ -17,8 +17,10 @@ esp32_improv:
   authorizer: none
 
 logger:
-  level: INFO
+  level: DEBUG
   logs:
+    status_led: INFO
+    binary_sensor: INFO
     light: INFO
   baud_rate: 115200
 
