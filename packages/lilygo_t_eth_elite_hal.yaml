@@ -16,27 +16,40 @@ psram:
   mode: octal
   speed: 80MHz
 
-captive_portal:
+ethernet:
+  type: W5500
+  clk_pin: GPIO48
+  mosi_pin: GPIO21
+  miso_pin: GPIO47
+  cs_pin: GPIO45
+  interrupt_pin: GPIO14
+
+uart:
+  rx_pin: GPIO39
+  tx_pin: GPIO42
+  baud_rate: 9600
 
 spi:
   clk_pin:
-    number: GPIO5
-  mosi_pin: GPIO6
+    number: GPIO10
+    # ignore_strapping_warning: true
+  mosi_pin: GPIO11
   miso_pin:
-    number: GPIO3
-    ignore_strapping_warning: true
+    number: GPIO9
+    # ignore_strapping_warning: true
+  interface: spi3
 
 wmbus_radio:
   radio_type: SX1276
-  cs_pin: GPIO7
-  reset_pin: GPIO8
-  irq_pin: GPIO33
+  cs_pin: GPIO40
+  reset_pin: GPIO46
+  irq_pin: GPIO16
 
 i2c:
   frequency: 800kHz
+  sda: GPIO17
+  scl: GPIO18
   scan: False
-  sda: GPIO18
-  scl: GPIO17
 
 display:
   - platform: ssd1306_i2c
@@ -49,7 +62,8 @@ display:
 light:
   - platform: status_led
     id: wmbus_gateway_status_led
-    pin: GPIO37
+    pin:
+      number: GPIO38
 
 binary_sensor:
   - platform: gpio
@@ -58,4 +72,56 @@ binary_sensor:
       number: GPIO0
       ignore_strapping_warning: true
       mode: input
-      inverted: True
+     inverted: True
+
+#  - platform: template
+#    name: "Button 1"
+#    condition:
+#      sensor.in_range:
+#        id: keys
+#        above: 2.08
+#        below: 2.28
+#  - platform: template
+#    name: "Button 2"
+#    condition:
+#      sensor.in_range:
+#       id: keys
+#       above: 1.53
+#        below: 1.73
+#  - platform: template
+#   name: "Button 3"
+#   condition:
+#     sensor.in_range:
+#       id: keys
+#       above: 0.99
+#        below: 1.19
+#  - platform: template
+#    name: "Button 4"
+#    condition:
+#      sensor.in_range:
+#        id: keys
+#        above: 0.64
+#        below: 0.84
+#  - platform: template
+#    name: "Button 5"
+#    condition:
+#      sensor.in_range:
+#        id: keys
+#        above: 0.31
+#        below: 0.51
+
+sensor:
+  - platform: bme280_i2c
+    temperature:
+      name: "Ttemperature"
+    pressure:
+      name: "Pressure"
+    humidity:
+      name: "Humidity"
+
+#  - platform: adc
+#    pin: GPIO07
+#    id: keys
+#    attenuation: 12db
+#    internal: true
+#    update_interval: 500ms
