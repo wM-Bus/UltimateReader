@@ -43,7 +43,8 @@ external_components:
   - source: 
       type: git
       url: https://github.com/SzczepanLeon/IoTLabs_ESPHome-Components/
-      ref: master
+      ref: ram
+      refresh: 0d
     components:
       - wmbus_common
       - wmbus_radio
@@ -52,6 +53,7 @@ external_components:
       type: git
       url: https://github.com/IoTLabs-pl/wM-Bus-Gateway
       ref: ${wmbus_gateway_version}
+      refresh: 0d
     components:
       - wmbus_gateway
 
