@@ -72,7 +72,7 @@ binary_sensor:
       number: GPIO0
       ignore_strapping_warning: true
       mode: input
-     inverted: True
+      inverted: True
 
 #  - platform: template
 #    name: "Button 1"
