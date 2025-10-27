@@ -1,0 +1,58 @@
+esphome:
+  platformio_options:
+    upload_speed: 921600
+
+esp32:
+  board: esp32-s3-devkitc-1
+  cpu_frequency: 240MHz
+  framework:
+    type: esp-idf
+
+wifi:
+  ap:
+
+captive_portal:
+
+sensor:
+  - platform: wifi_signal
+    name: "WiFi Signal dB"
+    id: wifi_signal_db
+    update_interval: 60s
+    entity_category: "diagnostic"
+
+  - platform: copy
+    source_id: wifi_signal_db
+    name: "WiFi Signal %"
+    filters:
+      - lambda: return {min(max(2 * (x + 100.0), 0.0), 100.0)};
+    unit_of_measurement: "%"
+    entity_category: "diagnostic"
+
+spi:
+  clk_pin:
+    number: GPIO9
+  mosi_pin:
+    number: GPIO10
+  miso_pin:
+    number: GPIO11
+
+wmbus_radio:
+  radio_type: SX1272
+#  busy_pin: GPIO13
+  cs_pin: GPIO8
+  reset_pin: GPIO12
+  irq_pin: GPIO14
+
+light:
+  - platform: status_led
+    id: wmbus_gateway_status_led
+    pin: GPIO35
+
+binary_sensor:
+  - platform: gpio
+    id: ext_button
+    pin:
+      number: GPIO0
+      ignore_strapping_warning: true
+      mode: input
+      inverted: True
