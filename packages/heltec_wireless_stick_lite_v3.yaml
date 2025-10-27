@@ -37,7 +37,7 @@ spi:
     number: GPIO11
 
 wmbus_radio:
-  radio_type: SX1272
+  radio_type: SX1262
 #  busy_pin: GPIO13
   cs_pin: GPIO8
   reset_pin: GPIO12
