@@ -9,6 +9,7 @@ esp32:
     type: esp-idf
 
 psram:
+  mode: quad
 
 wifi:
   ap:
